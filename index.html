@@ -77,6 +77,84 @@
 
       <div class="outer">
         <section id="main">
+  <article id="post-海明码" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/08/31/%E6%B5%B7%E6%98%8E%E7%A0%81/">海明检验码——选择题</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-08-31T12:23:54.620Z" itemprop="datePublished">2022年08月31日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/">海明检验码</a>
+  </div>
+
+      
+      
+<a href="/2022/08/31/%E6%B5%B7%E6%98%8E%E7%A0%81/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="海明检验码是在n个数据位之外增设k个校验位，从而形成一个k-n位的新的码字，使新的码字的码距比较均匀地拉大。n与k的关系是（）"><a href="#海明检验码是在n个数据位之外增设k个校验位，从而形成一个k-n位的新的码字，使新的码字的码距比较均匀地拉大。n与k的关系是（）" class="headerlink" title="海明检验码是在n个数据位之外增设k个校验位，从而形成一个k+n位的新的码字，使新的码字的码距比较均匀地拉大。n与k的关系是（）"></a>海明检验码是在n个数据位之外增设k个校验位，从而形成一个k+n位的新的码字，使新的码字的码距比较均匀地拉大。n与k的关系是（）</h4><pre><code class="markdown">A、2^k - 1 &gt;= n + k
+B、2^n - 1 &lt;= n+k
+C、n=k
+D、n-1 &lt;= k
+</code></pre>
+<p>解析：</p>
+<p>选A</p>
+<p>海明码是一种多重（复式）奇偶检错编码。它将信息用逻辑形式编码，以便能检错和纠错。用在海明码中的全部传输码字是由原来的信息和附加的奇偶检验位组成的。每一个这种奇偶位被编在传输码字的特定位置上。<br>推导并使用长度为n位的码字的海明码，所需步骤如下：</p>
+<ol>
+<li>确定最小的校验位数k，将他们记成D1、D2、… 、Dk,每个校验位符合不同的奇偶测试规定。</li>
+<li>原有信息和k个校验位一起编成长为<code>n+k</code>位的新码字。选择k检验位（0或者1）需满足必要的奇偶条件。</li>
+<li>对所接收的信息作所需的k个奇偶检查。</li>
+<li>如果所有的奇偶检查结果均正确，则认为信息无错误。如果发现一个或多个错了，则错误的位由这些检查的结果来唯一地确定。<br>求海明码时的一项基本考虑是确定所需最少的校验位数k。考虑长度为m位的信息，且附加了k个校验位。考虑长度为n位的信息，且附加了k个校验位，则所发送的总长度为n+k。在接收器中要进行k个奇偶检查，每个检查结果或是真或是假。这个奇偶检查的结果可以表示为一个k位的二进制，它可以确定最多<code>2^k</code>种不同状态。这些状态中必有一个其所有奇偶测试都是真的，它便是判定信息正确的条件。于是剩下的（<code>2^k-1</code>）种状态，可以用来判断误码的位置，于是导出以下关系：<br><code>2^k-1&gt;=n+k</code></li>
+</ol>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" rel="tag">海明检验码</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
   <article id="post-hexo" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-inner">
     
@@ -166,6 +244,10 @@
       <ul>
         
           <li>
+            <a href="/2022/08/31/%E6%B5%B7%E6%98%8E%E7%A0%81/">海明检验码——选择题</a>
+          </li>
+        
+          <li>
             <a href="/2022/08/23/hexo/">hexo</a>
           </li>
         
@@ -179,7 +261,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-tag"></i> 标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a>
+      <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" style="font-size: 10px;">海明检验码</a>
     </div>
   </div>
 
@@ -188,7 +270,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-classify"></i> 分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/">海明检验码</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -198,7 +280,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-archive"></i> 归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022年</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022年</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -208,7 +290,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-tag"></i> 标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" rel="tag">海明检验码</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
