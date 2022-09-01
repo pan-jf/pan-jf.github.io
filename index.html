@@ -77,7 +77,7 @@
 
       <div class="outer">
         <section id="main">
-  <article id="post-cpu" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <article id="post-cpu_2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-inner">
     
     
@@ -85,7 +85,90 @@
         
   
     <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/09/01/cpu/">CPU——选择题</a>
+      <a class="p-name article-title" href="/2022/09/01/cpu_2/">CPU——选择题</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T05:08:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/cpu_2/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="为实现程序指令的顺序执行，CPU（）中的值将自动加1"><a href="#为实现程序指令的顺序执行，CPU（）中的值将自动加1" class="headerlink" title="为实现程序指令的顺序执行，CPU（）中的值将自动加1"></a>为实现程序指令的顺序执行，CPU（）中的值将自动加1</h4><pre><code class="markdown">
+A、指令寄存器（IR）
+B、程序计数器（PC）
+C、地址寄存器（AR）
+D、指令译码器（ID）
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选B</p>
+<h5 id="CPU执行指令过程"><a href="#CPU执行指令过程" class="headerlink" title="CPU执行指令过程"></a>CPU执行指令过程</h5><ol>
+<li>当执行一条指令时，先把它从内存取到<code>数据寄存器（DR）</code>中，然后再传送至<code> 指令寄存器（IR）</code>。</li>
+<li><code>指令寄存器（IR）</code>保存当前正在执行的指令,然后再传送至<code>指令译码器（ID）</code>。</li>
+<li>为了执行任何给定的指令，<code>指令译码器（ID）</code>对操作码进行译码，并向操作控制器发出具体操作的特定信号。</li>
+<li>在操作期间，<code>地址寄存器（AR）</code>用来保存当前CPU所访问的内存单元的地址。由于在内存和CPU之间存在着操作速度上的差别，所以必须使用地址寄存器来保持地址信息，直到内存的读写操作完成为止。</li>
+<li>为了保证程序指令能够连续地执行下去，<code>程序计数器（PC）</code>来确定下一条指令的地址，所以又称为指令计数器。</li>
+</ol>
+<h5 id="程序计数器工作过程"><a href="#程序计数器工作过程" class="headerlink" title="程序计数器工作过程"></a>程序计数器工作过程</h5><ol>
+<li>在程序开始执行前，必须将它的起始地址，即程序的一条指令所在的内存单元地址送入PC，因此<code>程序计数器（PC）</code>的内容即是从内存提取的第一条指令的地址。</li>
+<li>当执行指令时，CPU将自动修改PC的内容，即每执行一条指令PC增加一个量，这个量等于指令所含的字节数，以便使其保持的总是将要执行的下一条指令的地址。</li>
+<li>由于大多数指令都是按顺序来执行的，所以修改的过程通常只是简单的对PC加1</li>
+</ol>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPU/" rel="tag">CPU</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-cpu_1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/cpu_1/">CPU——选择题</a>
     </h1>
   
 
@@ -106,7 +189,7 @@
 
       
       
-<a href="/2022/09/01/cpu/#comments" class="article-comment-link">
+<a href="/2022/09/01/cpu_1/#comments" class="article-comment-link">
   
   <i class="fa fa-commt"></i>
   留言
@@ -331,7 +414,11 @@ D、n-1 &lt;= k
       <ul>
         
           <li>
-            <a href="/2022/09/01/cpu/">CPU——选择题</a>
+            <a href="/2022/09/01/cpu_2/">CPU——选择题</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/01/cpu_1/">CPU——选择题</a>
           </li>
         
           <li>
@@ -352,7 +439,7 @@ D、n-1 &lt;= k
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-tag"></i> 标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/CPU/" style="font-size: 10px;">CPU</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" style="font-size: 10px;">海明检验码</a>
+      <a href="/tags/CPU/" style="font-size: 20px;">CPU</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" style="font-size: 10px;">海明检验码</a>
     </div>
   </div>
 
@@ -361,7 +448,7 @@ D、n-1 &lt;= k
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-classify"></i> 分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -371,7 +458,7 @@ D、n-1 &lt;= k
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-archive"></i> 归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022年</a><span class="archive-list-count">3</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022年</a><span class="archive-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -381,7 +468,7 @@ D、n-1 &lt;= k
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-tag"></i> 标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPU/" rel="tag">CPU</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" rel="tag">海明检验码</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPU/" rel="tag">CPU</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" rel="tag">海明检验码</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
