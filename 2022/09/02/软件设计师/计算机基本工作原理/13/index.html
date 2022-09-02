@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   
   
-  <title>循环冗余校验码 | 七月七日晴</title>
+  <title>浮点数对阶 | 七月七日晴</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   
   
@@ -72,7 +72,7 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-软件设计师/计算机基本工作原理/9" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-软件设计师/计算机基本工作原理/13" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-inner">
     
     
@@ -80,7 +80,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      循环冗余校验码
+      浮点数对阶
     </h1>
   
 
@@ -91,7 +91,7 @@
       
       <span class="article-date">
   <i class="fa fa-date"></i>
-  <time class="dt-published" datetime="2022-09-02T02:20:22.000Z" itemprop="datePublished">2022年09月02日</time>
+  <time class="dt-published" datetime="2022-09-02T09:23:20.000Z" itemprop="datePublished">2022年09月02日</time>
 </span>
       
   <div class="article-category">
@@ -109,7 +109,7 @@
 
       
       
-<a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/9/#comments" class="article-comment-link">
+<a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/13/#comments" class="article-comment-link">
   
     
     
@@ -125,22 +125,17 @@
     </div>
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h4 id="循环冗余校验码（CRC）利用生成多项式进行编码。设数据位为k位，校验位为r位，则CRC码的格式为（）"><a href="#循环冗余校验码（CRC）利用生成多项式进行编码。设数据位为k位，校验位为r位，则CRC码的格式为（）" class="headerlink" title="循环冗余校验码（CRC）利用生成多项式进行编码。设数据位为k位，校验位为r位，则CRC码的格式为（）"></a>循环冗余校验码（CRC）利用生成多项式进行编码。设数据位为k位，校验位为r位，则CRC码的格式为（）</h4><pre><code class="markdown">
-A、k个数据位之后跟r个校验位
-B、r个校验位之后跟k个数据位
-C、r个校验位随机加入k个数据位中
-D、r个校验位等间隔地加入k个数据位中
+        <h4 id="浮点数的表示分为阶和尾数两部分。两个浮点数相加时，需要先对阶，即（）（n为阶差绝对值）"><a href="#浮点数的表示分为阶和尾数两部分。两个浮点数相加时，需要先对阶，即（）（n为阶差绝对值）" class="headerlink" title="浮点数的表示分为阶和尾数两部分。两个浮点数相加时，需要先对阶，即（）（n为阶差绝对值）"></a>浮点数的表示分为阶和尾数两部分。两个浮点数相加时，需要先对阶，即（）（n为阶差绝对值）</h4><pre><code class="markdown">
+A、将大阶向小阶对齐，同时将尾数左移n位
+B、将大阶向小阶对齐，同时将尾数右移n位
+C、将小阶向大阶对齐，同时将尾数左移n位
+D、将小阶向大阶对齐，同时将尾数右移n位
 </code></pre>
-<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选A</p>
-<p>计算机系统运行时，各个部件之间要进行数据交换，为了确保数据在传送过程中正确无误。</p>
-<ol>
-<li>提高硬件电器的可靠性</li>
-<li>提高代码的校验能力，包括查错和纠错。</li>
-</ol>
-<p>常用的三种校验码：奇偶校验码，海明码和循环冗余校验码</p>
-<p>循环冗余校验码广泛应用于数据通信领域和磁介质存储系统中。它利用生成多项式为k个数据位产生r个校验位来进行编码。</p>
-<p>编码长度为k+r。CRC的代码格式为</p>
-<p><img src="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/9/crc.jpg" alt="crc"></p>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选D</p>
+<p>对阶时，小数向大数看齐；对阶是通过较小数的尾数右移实现的。</p>
+<h5 id="例如"><a href="#例如" class="headerlink" title="例如"></a>例如</h5><p>1000.2 + 119.3</p>
+<p>1000是 <code>1.0002X(10^3)</code> ，其中<code>1.0002</code>是尾数，3是指数，10是基数<br>119是 <code>1.193X(10^2)</code>，其中<code>1.193</code>是尾数，2是指数，10是基数</p>
+<p>对阶需要先将 <code>1.193X(10^2)</code> 要转成 <code>0.1193X(10^3)</code>，然后再计算 <code>1.0002 + 0.1193</code>,得出1.1195 X (10^3)</p>
 
         
             <div id="toc-article">
@@ -148,7 +143,7 @@ D、r个校验位等间隔地加入k个数据位中
   <div class="widget-wrap" id="toc-wrap">
     <h3 class="widget-title"><i class="fa fa-toc"></i> 文章目录</h3>
     <div class="widget">
-      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E5%86%97%E4%BD%99%E6%A0%A1%E9%AA%8C%E7%A0%81%EF%BC%88CRC%EF%BC%89%E5%88%A9%E7%94%A8%E7%94%9F%E6%88%90%E5%A4%9A%E9%A1%B9%E5%BC%8F%E8%BF%9B%E8%A1%8C%E7%BC%96%E7%A0%81%E3%80%82%E8%AE%BE%E6%95%B0%E6%8D%AE%E4%BD%8D%E4%B8%BAk%E4%BD%8D%EF%BC%8C%E6%A0%A1%E9%AA%8C%E4%BD%8D%E4%B8%BAr%E4%BD%8D%EF%BC%8C%E5%88%99CRC%E7%A0%81%E7%9A%84%E6%A0%BC%E5%BC%8F%E4%B8%BA%EF%BC%88%EF%BC%89"><span class="toc-text">循环冗余校验码（CRC）利用生成多项式进行编码。设数据位为k位，校验位为r位，则CRC码的格式为（）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90"><span class="toc-text">解析</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%AE%E7%82%B9%E6%95%B0%E7%9A%84%E8%A1%A8%E7%A4%BA%E5%88%86%E4%B8%BA%E9%98%B6%E5%92%8C%E5%B0%BE%E6%95%B0%E4%B8%A4%E9%83%A8%E5%88%86%E3%80%82%E4%B8%A4%E4%B8%AA%E6%B5%AE%E7%82%B9%E6%95%B0%E7%9B%B8%E5%8A%A0%E6%97%B6%EF%BC%8C%E9%9C%80%E8%A6%81%E5%85%88%E5%AF%B9%E9%98%B6%EF%BC%8C%E5%8D%B3%EF%BC%88%EF%BC%89%EF%BC%88n%E4%B8%BA%E9%98%B6%E5%B7%AE%E7%BB%9D%E5%AF%B9%E5%80%BC%EF%BC%89"><span class="toc-text">浮点数的表示分为阶和尾数两部分。两个浮点数相加时，需要先对阶，即（）（n为阶差绝对值）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90"><span class="toc-text">解析</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BE%8B%E5%A6%82"><span class="toc-text">例如</span></a></li></ol></li></ol>
     </div>
   </div>
 
@@ -164,7 +159,7 @@ D、r个校验位等间隔地加入k个数据位中
           
 
           
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CRC/" rel="tag">CRC</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/" rel="tag">浮点数</a></li></ul>
 
           
 
@@ -175,24 +170,15 @@ D、r个校验位等间隔地加入k个数据位中
         
 <nav id="article-nav">
   
-    <a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/3/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/6/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">older</strong>
       <div class="article-nav-title">
         
-          存储单元计算
+          为从内存读取指令操作码，首先要将（）的内容送到地址总线上
         
       </div>
     </a>
   
-  
-    <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/3/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">newer</strong>
-      <div class="article-nav-title">
-        
-          中断向量可提供（）
-        
-      </div>
-    </a>
   
 </nav>
 
