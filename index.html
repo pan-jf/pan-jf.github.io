@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>七月七日晴</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  
+  
+    <link rel="alternate" href="/atom.xml" title="七月七日晴" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="/localshare/css/share.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">七月七日晴</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        
+          <a class="main-nav-link" href="/."><i class="fa fa-home"></i> 首页</a>
+        
+          <a class="main-nav-link" href="/archives/"><i class="fa fa-archive"></i> 归档</a>
+        
+          <a class="main-nav-link" href="/about/"><i class="fa fa-user"></i> 关于</a>
+        
+          <a class="main-nav-link" href="/atom.xml"><i class="fa fa-rss"></i> 订阅</a>
+        
+      </nav>
+    </div>
+    <div id="search-form">
+      <div id="result-mask" class="hide"></div>
+      <label><input id="search-key" type="text" autocomplete="off" placeholder="搜索"></label>
+      <div id="result-wrap" class="hide">
+        <div id="search-result"></div>
+      </div>
+      <div class="hide">
+        <template id="search-tpl">
+          <div class="item">
+            <a href="/{path}" title="{title}">
+              <div class="title">{title}</div>
+              <div class="time">{date}</div>
+              <div class="tags">{tags}</div>
+            </a>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  <article id="post-golang/context/1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/03/golang/context/1/">context包底层及面试题</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-03T15:07:22.000Z" itemprop="datePublished">2022年09月03日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/Golang/">Golang</a>
+  </div>
+
+      
+      
+<a href="/2022/09/03/golang/context/1/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="包核心方法"><a href="#包核心方法" class="headerlink" title="包核心方法"></a>包核心方法</h3><ul>
+<li>context.WithValue<ul>
+<li>设置键值对，并返回一个新的context实例</li>
+</ul>
+</li>
+<li>context.WithCancel<ul>
+<li>用于设置链路。</li>
+</ul>
+</li>
+<li>context.WithDeadine<ul>
+<li>用于设置链路。</li>
+</ul>
+</li>
+<li>context.WithTimeout<ul>
+<li>用于设置链路。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>注意：<code>context</code>实例都是不可变的，每一次都是新创建的。</p>
+</blockquote>
+<h3 id="包核心接口API"><a href="#包核心接口API" class="headerlink" title="包核心接口API"></a>包核心接口API</h3><ul>
+<li>Deadline<ul>
+<li>返回过期时间，如果<code>ok</code>为<code>false</code>，说明没有设置过期时间。</li>
+</ul>
+</li>
+<li>Done<ul>
+<li>返回一个<code>channel</code>，一般用于监听<code>Context</code>实例的信号，比如说过期，或者正常关闭</li>
+</ul>
+</li>
+<li>Err<ul>
+<li>返回一个错误用于表达Context发生了什么<ul>
+<li><code>Canceled</code>表示正常关闭</li>
+<li><code>DeadlineExceeded</code>表示过期超时</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Value<ul>
+<li>取值</li>
+</ul>
+</li>
+</ul>
+<h3 id="context包用途"><a href="#context包用途" class="headerlink" title="context包用途"></a>context包用途</h3><ol>
+<li>安全传递数据</li>
+<li>控制链路</li>
+</ol>
+<h4 id="安全传递数据"><a href="#安全传递数据" class="headerlink" title="安全传递数据"></a>安全传递数据</h4><p>安全传递数据，是指在请求执行上下文中线程安全地传递数据，依赖于<code>WithValue</code>方法</p>
+<p>因为Go本身没有<code>thread-local</code>机制，所以大部分类似的功能都是借助于<code>context</code>来实现的。</p>
+<h4 id="实际例子"><a href="#实际例子" class="headerlink" title="实际例子"></a>实际例子</h4><ol>
+<li>链路追踪的<code>trace id</code></li>
+<li>AB测试的标记位</li>
+<li>压力测试的标记位</li>
+<li>分库分表中间件中传递 <code>Sharding hint</code></li>
+<li>ORM中间件传递<code>SQL hint</code></li>
+<li>web框架传递上下文</li>
+</ol>
+<p><img src="/2022/09/03/golang/context/1/1.png" alt="ctx链路图"></p>
+<blockquote>
+<p>进程内传递就是依赖于<code>context.Context</code>传递的，也就是意味着所有的方法都必须有<code>context.Context</code>参数</p>
+</blockquote>
+<h3 id="父子关系"><a href="#父子关系" class="headerlink" title="父子关系"></a>父子关系</h3><ul>
+<li>当父亲取消或者超时，所有派生的子<code>context</code>都被取消或者超时</li>
+<li>当找key的时候，子<code>context</code>先看自己有没有，没有则去祖先里面找</li>
+</ul>
+<pre><code class="golang">func TestParentCtx(t *testing.T) &#123;
+    ctx := context.Background()
+    dlCtx, cancel := context.WithDeadline(ctx, time.Now().Add(time.Minute))
+    childCtx := context.WithValue(dlCtx, &quot;key&quot;, 123)
+    cancel()
+    err := childCtx.Err()
+    fmt.Println(err)
+&#125;
+</code></pre>
+<pre><code class="golang">func TestParentValueCtx(t *testing.T) &#123;
+    ctx := context.Background()
+    childCtx := context.WithValue(ctx, &quot;key1&quot;, 123)
+    ccCtx := context.WithValue(childCtx, &quot;key2&quot;, 1234)
+    val := childCtx.Value(&quot;key2&quot;)
+    // 儿子拿不到孙子设置的值
+    fmt.Println(val)
+    val = ccCtx.Value(&quot;key1&quot;)
+    // 孙子能拿到儿子的值
+    fmt.Println(val)
+&#125;
+</code></pre>
+<h3 id="核心方法分析"><a href="#核心方法分析" class="headerlink" title="核心方法分析"></a>核心方法分析</h3><h4 id="WithValue"><a href="#WithValue" class="headerlink" title="WithValue"></a>WithValue</h4><p><img src="/2022/09/03/golang/context/1/2.png" alt="valueCtx结构体"></p>
+<p><code>WithValue</code>底层采用<code>valueCtx</code>存储，可以看到使用key,val分别存储键值信息</p>
+<ul>
+<li>典型的<code>装饰器模式</code><ul>
+<li>在已有<code>Context</code>的基础上附加一个存储<code>key-value</code>的功能</li>
+</ul>
+</li>
+<li>只能存储一个key,val<ul>
+<li>为什么不用map？<ul>
+<li>map要求key是<code>comparable</code>的，而我们可能用不是<code>comparable</code>的key</li>
+<li><code>context</code>包的设计理念就是将<code>context</code>设计为不可变</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="控制方法"><a href="#控制方法" class="headerlink" title="控制方法"></a>控制方法</h4><blockquote>
+<p><code>WithCancel</code>,<code>WithDeadline</code>,<code>WithTimeout</code>三者都是控制方法，区别在于</p>
+</blockquote>
+<ul>
+<li>没有过期时间，但是又必须在必要的时候取消，使用<code>WithCancel</code></li>
+<li>在固定点过期，使用<code>WithDeadline</code></li>
+<li>在一段时间后过期，使用<code>WithTimeout</code>(其实看底层可以得知，也还是调用了<code>WithDeadline</code>)</li>
+</ul>
+<p><img src="/2022/09/03/golang/context/1/3.png" alt="WithTimeout方法"></p>
+<p>使用控制方法后，监听<code>Done()</code>返回的<code>channel</code>，不管是主动调用<code>cancel()</code>还是超时，都可以从这个<code>channel</code>取出数据，并且可以根据<code>Err()</code>判断出属于那种情况</p>
+<blockquote>
+<p>父Context可以控制子Context,反过来不行</p>
+</blockquote>
+<pre><code class="golang">func TestContextTimeout(t *testing.T) &#123;
+    bg := context.Background()
+    timeoutCtx, cancel1 := context.WithTimeout(bg, time.Second)
+    // 子context尝试3秒才取消，是没效果的
+    subCtx, cancel2 := context.WithTimeout(timeoutCtx, 3*time.Second)
+    go func() &#123;
+        // 1秒钟之后就会过期，然后输出timeout
+        &lt;-subCtx.Done()
+        fmt.Println(&quot;timeout&quot;)
+    &#125;()
+    time.Sleep(2 * time.Second)
+    cancel2()
+    cancel1()
+&#125;
+</code></pre>
+<h3 id="常用方法——控制超时"><a href="#常用方法——控制超时" class="headerlink" title="常用方法——控制超时"></a>常用方法——控制超时</h3><p>相当于同时监听2个<code>channel</code>，一个是正常业务结束的<code>channel</code>，一个是<code>Done()</code>返回的<code>channel</code></p>
+<pre><code class="golang">func TestTimeoutExample(t *testing.T) &#123;
+    ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+    defer cancel()
+    bsChan := make(chan struct&#123;&#125;)
+    go func() &#123;
+        slowBusiness()
+        bsChan &lt;- struct&#123;&#125;&#123;&#125;
+    &#125;()
+    select &#123;
+    case &lt;-ctx.Done():
+        fmt.Println(&quot;timeout&quot;)
+    case &lt;-bsChan:
+        fmt.Println(&quot;business end&quot;)
+    &#125;
+&#125;
+
+func slowBusiness() &#123;
+    time.Sleep(2 * time.Second)
+&#125;
+</code></pre>
+<h4 id="其他方法处理控制超时-不推荐"><a href="#其他方法处理控制超时-不推荐" class="headerlink" title="其他方法处理控制超时(不推荐)"></a>其他方法处理控制超时(不推荐)</h4><p>使用<code>time.AfterFunc</code>控制超时，但实际这种使用会被认为是定时任务，不大像是超时控制</p>
+<p>主要有2个弊端：</p>
+<ol>
+<li>如果不主动取消，那么<code>AfterFunc</code>是必然会执行的</li>
+<li>如果主动取消，那么在业务正常取消到主动取消之间。有一个短的时间差。</li>
+</ol>
+<pre><code class="golang">func TestTimeoutTimeAfter(t *testing.T) &#123;
+    bsChan := make(chan struct&#123;&#125;)
+    go func() &#123;
+        slowBusiness()
+        bsChan &lt;- struct&#123;&#125;&#123;&#125;
+    &#125;()
+    timer := time.AfterFunc(time.Second, func() &#123;
+        fmt.Println(&quot;timeout&quot;)
+    &#125;)
+    &lt;-bsChan
+    fmt.Println(&quot;business end&quot;)
+    timer.Stop()
+&#125;
+</code></pre>
+<h4 id="DB-conn-控制超时"><a href="#DB-conn-控制超时" class="headerlink" title="DB.conn 控制超时"></a>DB.conn 控制超时</h4><p>首先检查一次<code>context.Context</code>有没有超时</p>
+<p>这种提前检测一下的用法还是比较常见的，比如说RPC链路超时控制就可以先看看context有没有超时</p>
+<p>如果超时可以不发送请求，直接返回超时响应</p>
+<p><img src="/2022/09/03/golang/context/1/4.png" alt="DB.conn源码"></p>
+<p>一般来说，超时控制至少两个分支</p>
+<ol>
+<li>超时分支</li>
+<li>正常业务分支</li>
+</ol>
+<blockquote>
+<p>所以一般<code>context.Context</code>和<code>select case</code>一起使用</p>
+</blockquote>
+<p><img src="/2022/09/03/golang/context/1/5.png" alt="DB.conn源码2"></p>
+<h3 id="errgroup-WithContext使用context传递信号"><a href="#errgroup-WithContext使用context传递信号" class="headerlink" title="errgroup.WithContext使用context传递信号"></a>errgroup.WithContext使用context传递信号</h3><p>包引入 <code>&quot;golang.org/x/sync/errgroup&quot;</code></p>
+<ul>
+<li><code>withContext</code>会返回一个<code>context.Context</code>实例</li>
+<li>如果<code>errgroup.Group</code>的<code>Wait</code>返回，或者任何一个<code>group</code>执行的函数返回<code>Error</code>,<code>context.Context</code>实例都会被取消（一损俱损）</li>
+<li>用户可以监听<code>context.Context</code>来判断<code>errgroup.Group</code>的执行情况</li>
+</ul>
+<blockquote>
+<p>这是典型的将<code>context.Context</code>作为信号载体的用法，本质是依赖于<code>channel</code>的特性。</p>
+</blockquote>
+<p><img src="/2022/09/03/golang/context/1/6.png" alt="errgroup.WithContext"></p>
+<h3 id="cancelCtx实现"><a href="#cancelCtx实现" class="headerlink" title="cancelCtx实现"></a>cancelCtx实现</h3><p><code>cancelCtx</code>也是典型的装饰器模式，在已有Context的基础上，加上取消的功能</p>
+<p>核心实现：</p>
+<ol>
+<li>Done方法是通过类似于 <code>double-check</code> 的机制写的。这种原子操作和锁结合的用法比较罕见</li>
+<li>利用children来维护了所有的衍生节点，难点在于如何维护这个衍生节点</li>
+</ol>
+<p><img src="/2022/09/03/golang/context/1/7.png" alt="cancelCtx"></p>
+<p><img src="/2022/09/03/golang/context/1/8.png" alt="cancelCtx.Done"></p>
+<p>children:核心是儿子把自己加进去父亲的children字段里面</p>
+<p>但是因为context里面存在非常多的层级，所以父亲不一定是cancelCtx,因此本质上是找属于cancelCtx类型的祖先，然后儿子把自己加进去</p>
+<p>cancel就是遍历children，挨个调用cancel，然后儿子调用孙子的cancel，子子孙孙无穷匮也。</p>
+<p><img src="/2022/09/03/golang/context/1/9.png" alt="cancelCtx.cancel"></p>
+<h3 id="timerCtx实现"><a href="#timerCtx实现" class="headerlink" title="timerCtx实现"></a>timerCtx实现</h3><p><code>timerCtx</code>也是装饰器模式，在已有<code>cancelCtx</code>的基础上增加了超时的功能</p>
+<p><img src="/2022/09/03/golang/context/1/10.png" alt="timerCtx"></p>
+<p>核心实现：</p>
+<ol>
+<li>在创建<code>timerCtx</code>的时候，利用<code>time.AfterFunc</code>来实现超时</li>
+</ol>
+<p><img src="/2022/09/03/golang/context/1/11.png" alt="timerCtx.cancel"></p>
+<h3 id="使用注意事项"><a href="#使用注意事项" class="headerlink" title="使用注意事项"></a>使用注意事项</h3><ol>
+<li>一般只用做方法参数，而且是作为第一个参数</li>
+<li>所有公共方法，除非是util，helper之类的方法，否则都加上context参数</li>
+<li>不要用作结构体字段，除非你的结构体本身也是表达一个上下文的概念</li>
+</ol>
+<h3 id="面试要点"><a href="#面试要点" class="headerlink" title="面试要点"></a>面试要点</h3><ul>
+<li>context.Context使用场景：上下文传递和超时控制</li>
+<li>context.Context原理：<ul>
+<li>父亲如何控制儿子：通过儿子主动加入到父亲的children里面，父亲只需要遍历就可以</li>
+<li>valueCtx和timeCtx的原理</li>
+</ul>
+</li>
+</ul>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/index.html">https://pan-jf.github.io/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/context/" rel="tag">context</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/存储系统/4" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/4/">主存与cache的地址映射方式</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-02T08:05:22.000Z" itemprop="datePublished">2022年09月02日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/">存储系统</a>
+  </div>
+
+      
+      
+<a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/4/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="主存与cache的地址映射方式中，（）方式可以实现主存任意一块装入cache中任意位置，只有装满才需要替换"><a href="#主存与cache的地址映射方式中，（）方式可以实现主存任意一块装入cache中任意位置，只有装满才需要替换" class="headerlink" title="主存与cache的地址映射方式中，（）方式可以实现主存任意一块装入cache中任意位置，只有装满才需要替换"></a>主存与cache的地址映射方式中，（）方式可以实现主存任意一块装入cache中任意位置，只有装满才需要替换</h4><pre><code class="markdown">
+A、全相连
+B、直接映射
+C、组相连
+D、串并联
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选A</p>
+<p>全相连地址映射：主存的任意一块可以映射到cache中的任意一块</p>
+<p>直接相连映射：主存中的一块只能映射到cache一个特定的块中</p>
+<p>组相连的映射：各区的某一块只能存入缓存的同租号的空间内，但组内各块地址之间则可以任意存放</p>
+<p>一般来说，主存到cache之间采用直接相连映射；两个对应的组内部采用全相连映射方式</p>
+<p>但本题问的是，哪种方式可以实现<code>主存任意一块装入cache中任意位置</code>,所以应该是全相连</p>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/index.html">https://pan-jf.github.io/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" rel="tag">地址映射方式</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/计算机基本工作原理/12" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/12/">CPU对其访问速度最快的是（）</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-02T07:56:22.000Z" itemprop="datePublished">2022年09月02日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a>
+  </div>
+
+      
+      
+<a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/12/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="计算机中CPU对其访问速度最快的是（）"><a href="#计算机中CPU对其访问速度最快的是（）" class="headerlink" title="计算机中CPU对其访问速度最快的是（）"></a>计算机中CPU对其访问速度最快的是（）</h4><pre><code class="markdown">
+A、内存
+B、Cache
+C、通用寄存器
+D、硬盘
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选C</p>
+<p>计算机系统中的CPU内部对通用寄存器的存储速度是最快的。</p>
+<p>其次是cache</p>
+<p>内存的存取速度再次</p>
+<p>硬盘作为外存是速度最慢的</p>
+<p>它们共同组成分级存储体系来解决存储容量、成本和速度之间的矛盾。</p>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/index.html">https://pan-jf.github.io/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPU/" rel="tag">CPU</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/计算机基本工作原理/11" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/11/">定点整数的最大值为（）</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-02T07:49:22.000Z" itemprop="datePublished">2022年09月02日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a>
+  </div>
+
+      
+      
+<a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/11/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="某机器字长为n，最高位是符号位，其定点整数的最大值为（）"><a href="#某机器字长为n，最高位是符号位，其定点整数的最大值为（）" class="headerlink" title="某机器字长为n，最高位是符号位，其定点整数的最大值为（）"></a>某机器字长为n，最高位是符号位，其定点整数的最大值为（）</h4><pre><code class="markdown">
+A、2^n - 1
+B、2^(n-1) - 1
+C、2^n
+D、2^(n-1)
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选B</p>
+<p>机器字长为n，最高位为符号位，则剩余的n-1位用来表示数值，其最大值是这n-1位都为1，也就是2^(n-1)-1</p>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/index.html">https://pan-jf.github.io/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AD%97%E9%95%BF/" rel="tag">字长</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/计算机基本工作原理/10" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/10/">指令寄存器的位数取决于（）</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-02T07:36:22.000Z" itemprop="datePublished">2022年09月02日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a>
+  </div>
+
+      
+      
+<a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/10/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="指令寄存器的位数取决于（）"><a href="#指令寄存器的位数取决于（）" class="headerlink" title="指令寄存器的位数取决于（）"></a>指令寄存器的位数取决于（）</h4><pre><code class="markdown">
+A、存储器的容量
+B、指令字长
+C、数据总线的宽度
+D、地址总线的宽度
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选B</p>
+<p>指令寄存器是CPU中的关键寄存器，其内容为正在执行的指令，显然其位数取决于指令字长。</p>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/index.html">https://pan-jf.github.io/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">指令寄存器</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/输入输出系统/3" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/3/">中断向量可提供（）</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-02T07:36:22.000Z" itemprop="datePublished">2022年09月02日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/">输入输出系统</a>
+  </div>
+
+      
+      
+<a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/3/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="中断向量可提供（）"><a href="#中断向量可提供（）" class="headerlink" title="中断向量可提供（）"></a>中断向量可提供（）</h4><pre><code class="markdown">
+A、IO设备的端口地址
+B、所传送数据的起始地址
+C、中断服务程序的入口地址
+D、主程序的断点地址
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选C</p>
+<p>计算机在执行程序过程中，当遇到急需处理的事件时，暂停当前正在运行的程序，转去执行有关服务程序，处理完后自动返回原程序，这个过程称为中断。</p>
+<p>中断是一个非常重要的技术。输入输出设备和主机交换数据、分时操作、实时系统、计算机网络和分布式计算机系统中都要用到这种技术。</p>
+<p>为了提高响应中断的速度，通常把所有中断服务程序的入口地址（或称为中断向量）汇集为中断向量表。</p>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/index.html">https://pan-jf.github.io/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" rel="tag">中断向量</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/计算机基本工作原理/9" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/9/">循环冗余校验码</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-02T02:20:22.000Z" itemprop="datePublished">2022年09月02日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a>
+  </div>
+
+      
+      
+<a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/9/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="循环冗余校验码（CRC）利用生成多项式进行编码。设数据位为k位，校验位为r位，则CRC码的格式为（）"><a href="#循环冗余校验码（CRC）利用生成多项式进行编码。设数据位为k位，校验位为r位，则CRC码的格式为（）" class="headerlink" title="循环冗余校验码（CRC）利用生成多项式进行编码。设数据位为k位，校验位为r位，则CRC码的格式为（）"></a>循环冗余校验码（CRC）利用生成多项式进行编码。设数据位为k位，校验位为r位，则CRC码的格式为（）</h4><pre><code class="markdown">
+A、k个数据位之后跟r个校验位
+B、r个校验位之后跟k个数据位
+C、r个校验位随机加入k个数据位中
+D、r个校验位等间隔地加入k个数据位中
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选A</p>
+<p>计算机系统运行时，各个部件之间要进行数据交换，为了确保数据在传送过程中正确无误。</p>
+<ol>
+<li>提高硬件电器的可靠性</li>
+<li>提高代码的校验能力，包括查错和纠错。</li>
+</ol>
+<p>常用的三种校验码：奇偶校验码，海明码和循环冗余校验码</p>
+<p>循环冗余校验码广泛应用于数据通信领域和磁介质存储系统中。它利用生成多项式为k个数据位产生r个校验位来进行编码。</p>
+<p>编码长度为k+r。CRC的代码格式为</p>
+<p><img src="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/9/crc.jpg" alt="crc"></p>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/index.html">https://pan-jf.github.io/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CRC/" rel="tag">CRC</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/存储系统/3" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/3/">存储单元计算</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T09:12:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/">存储系统</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/3/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="内存单元按字节编址，地址0000A000H-0000BFFFH共有（）个存储单元"><a href="#内存单元按字节编址，地址0000A000H-0000BFFFH共有（）个存储单元" class="headerlink" title="内存单元按字节编址，地址0000A000H~0000BFFFH共有（）个存储单元"></a>内存单元按字节编址，地址0000A000H~0000BFFFH共有（）个存储单元</h4><pre><code class="markdown">
+A、8192K
+B、1024K
+C、13K
+D、8K
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选D</p>
+<p>每个地址编号为一个存储单元（容量为1个字节）</p>
+<p>地址区间 0000A000H~0000BFFFH 共有1FFF + 1个地址编号。</p>
+<p>1FFF + 1 &#x3D; 2000(16进制) &#x3D; 16^3 * 2 (10进制)&#x3D; 2^(4*3) * 2 - 2^(12+1) &#x3D; 2^13 byte</p>
+<p>1个字节： 1k &#x3D; 1024byte &#x3D; 2^10</p>
+<p>结果 &#x3D; 2^13 &#x2F; 2^10 &#x3D; 2^(13-10) &#x3D; 2^3 &#x3D; 8k</p>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/index.html">https://pan-jf.github.io/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" rel="tag">存储单元</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/计算机基本工作原理/8" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/8/">补码最大表示范围</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T08:53:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/8/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="若某计算机采用8位整数补码表示数据，则运算（）将产生溢出"><a href="#若某计算机采用8位整数补码表示数据，则运算（）将产生溢出" class="headerlink" title="若某计算机采用8位整数补码表示数据，则运算（）将产生溢出"></a>若某计算机采用8位整数补码表示数据，则运算（）将产生溢出</h4><pre><code class="markdown">
+A、-127+1
+B、-127-1
+C、127+1
+D、127-1
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选C</p>
+<p>采用8位补码表示整型数据时，可表示的数据范围为 -128~127，因此进行127+1运算会产生溢出。</p>
+<p>最大表示的正整数为</p>
+<p>补码 01111111 -&gt; 原码为 2^8-1 &#x3D; 127</p>
+<p>最大表示的负整数为</p>
+<p>补码 10000000 -&gt; 原码为 -128</p>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/index.html">https://pan-jf.github.io/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%A1%A5%E7%A0%81/" rel="tag">补码</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/系统性能评测和可靠性基础/1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%9F%BA%E7%A1%80/1/">系统可靠度计算</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T07:50:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%9F%BA%E7%A1%80/">系统性能评测和可靠性基础</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%9F%BA%E7%A1%80/1/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="某计算机系统由下面所示的部件构成，假定每个部件的千小时可靠度都为R，则该系统的千小时可靠度为（）"><a href="#某计算机系统由下面所示的部件构成，假定每个部件的千小时可靠度都为R，则该系统的千小时可靠度为（）" class="headerlink" title="某计算机系统由下面所示的部件构成，假定每个部件的千小时可靠度都为R，则该系统的千小时可靠度为（）"></a>某计算机系统由下面所示的部件构成，假定每个部件的千小时可靠度都为R，则该系统的千小时可靠度为（）</h4><p><img src="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%9F%BA%E7%A1%80/1/bujian.jpg" alt="部件分布图"></p>
+<pre><code class="markdown">
+A、R + 2R / 4
+B、R + R^2 / 4
+C、R(1-(1-R)^2)
+D、R(1-(1-R)^2)^2
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选D</p>
+<p>由于系统构成串联系统时，其中任何一个子系统失效就足以使系统失效，其可靠度等于各子系统可靠度的乘积。</p>
+<p>构成并联系统时，只要有一个子系统正常工作，系统就能正常工作。设每个子系统的可靠性分别以R1,R2, … ,Rn表示，则整个系统的可靠度表达为</p>
+<pre><code class="markdown">R = 1 - (1-R1)(1-R2) ... (1-Rn)
+</code></pre>
+<p>因此，本系统的可靠度计算分以下部分</p>
+<ol>
+<li>最左边的为R</li>
+<li>中间的为 <code>1 - (1-R)(1-R)</code> &#x3D; <code>1 - (1-R)^2</code></li>
+<li>右边的为 <code>1 - (1-R)(1-R)</code> &#x3D; <code>1 - (1-R)^2</code></li>
+<li>串联相乘得出 R(1 - (1-R)^2) ^2</li>
+</ol>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/index.html">https://pan-jf.github.io/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" rel="tag">系统可靠度</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+
+    <nav id="page-nav">
+
+<span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
+</nav>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title"><i class="fa fa-posts"></i> 最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/09/03/golang/context/1/">context包底层及面试题</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/4/">主存与cache的地址映射方式</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/12/">CPU对其访问速度最快的是（）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/11/">定点整数的最大值为（）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/10/">指令寄存器的位数取决于（）</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title"><i class="fa fa-tag"></i> 标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CISC/" style="font-size: 10px;">CISC</a> <a href="/tags/CPU/" style="font-size: 20px;">CPU</a> <a href="/tags/CRC/" style="font-size: 10px;">CRC</a> <a href="/tags/Cache/" style="font-size: 10px;">Cache</a> <a href="/tags/DMA/" style="font-size: 13.33px;">DMA</a> <a href="/tags/RISC/" style="font-size: 10px;">RISC</a> <a href="/tags/VLIW/" style="font-size: 10px;">VLIW</a> <a href="/tags/context/" style="font-size: 10px;">context</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" style="font-size: 10px;">中断向量</a> <a href="/tags/%E4%B8%BB%E5%AD%98/" style="font-size: 13.33px;">主存</a> <a href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">地址映射方式</a> <a href="/tags/%E5%AD%97%E9%95%BF/" style="font-size: 10px;">字长</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" style="font-size: 10px;">存储单元</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" style="font-size: 13.33px;">存储器</a> <a href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">寄存器</a> <a href="/tags/%E6%80%BB%E7%BA%BF/" style="font-size: 10px;">总线</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" style="font-size: 10px;">指令周期</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">指令寄存器</a> <a href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" style="font-size: 10px;">海明检验码</a> <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" style="font-size: 16.67px;">程序计数器</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" style="font-size: 10px;">系统可靠度</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" style="font-size: 10px;">累加器</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">累加寄存器</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 13.33px;">补码</a> <a href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" style="font-size: 10px;">防火墙</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title"><i class="fa fa-classify"></i> 分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%92%8C%E7%97%85%E6%AF%92%E9%98%B2%E6%8A%A4/">信息安全和病毒防护</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/">存储系统</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%9F%BA%E7%A1%80/">系统性能评测和可靠性基础</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/">输入输出系统</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title"><i class="fa fa-archive"></i> 归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022年</a><span class="archive-list-count">28</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title"><i class="fa fa-tag"></i> 标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CISC/" rel="tag">CISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPU/" rel="tag">CPU</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CRC/" rel="tag">CRC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cache/" rel="tag">Cache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DMA/" rel="tag">DMA</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RISC/" rel="tag">RISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VLIW/" rel="tag">VLIW</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/context/" rel="tag">context</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" rel="tag">中断向量</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E5%AD%98/" rel="tag">主存</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" rel="tag">地址映射方式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%97%E9%95%BF/" rel="tag">字长</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" rel="tag">存储单元</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" rel="tag">存储器</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%BB%E7%BA%BF/" rel="tag">总线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" rel="tag">指令周期</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">指令寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" rel="tag">海明检验码</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" rel="tag">程序计数器</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" rel="tag">系统可靠度</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" rel="tag">累加器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">累加寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%A1%A5%E7%A0%81/" rel="tag">补码</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" rel="tag">防火墙</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title"><i class="fa fa-link"></i> 友情链接</h3>
+    <div class="widget">
+      <ul>
+      
+        <li>
+          <a target="_blank" rel="noopener" href="http://www.example1.com/">site-name1</a>
+        </li>
+      
+        <li>
+          <a target="_blank" rel="noopener" href="http://www.example2.com/">site-name2</a>
+        </li>
+      
+        <li>
+          <a target="_blank" rel="noopener" href="http://www.example3.com/">site-name3</a>
+        </li>
+      
+      </ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+        
+      </div>
+      <a id="totop" href="#top"></a>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      <p>
+        <a href="/sitemap.xml">网站地图</a>
+        <span> | </span><a href="/atom.xml">订阅本站</a>
+        <span> | </span><a href="/about/">联系博主</a>
+      </p>
+      
+        <p>
+          <i class="fa fa-visitors"></i>
+          <i id="busuanzi_container_site_uv"><i id="busuanzi_value_site_uv"></i></i>
+          ，
+          <i class="fa fa-views"></i>
+          <i id="busuanzi_container_site_pv"><i id="busuanzi_value_site_pv"></i></i>
+        </p>
+      
+      <p>
+        <span>Copyright &copy; 2022 pan-jf.</span>
+        <span>Theme by <a href="https://github.com/chaooo/hexo-theme-BlueLake/" target="_blank">BlueLake.</a></span>
+        <span>Powered by <a href="https://hexo.io/" target="_blank">Hexo.</a></span>
+      </p>
+    </div>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/search.json.js"></script>
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+
+  
+<script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+
+  
+
+
+
+</body>
+</html>

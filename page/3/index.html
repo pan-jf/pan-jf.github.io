@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>七月七日晴</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  
+  
+    <link rel="alternate" href="/atom.xml" title="七月七日晴" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="/localshare/css/share.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">七月七日晴</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        
+          <a class="main-nav-link" href="/."><i class="fa fa-home"></i> 首页</a>
+        
+          <a class="main-nav-link" href="/archives/"><i class="fa fa-archive"></i> 归档</a>
+        
+          <a class="main-nav-link" href="/about/"><i class="fa fa-user"></i> 关于</a>
+        
+          <a class="main-nav-link" href="/atom.xml"><i class="fa fa-rss"></i> 订阅</a>
+        
+      </nav>
+    </div>
+    <div id="search-form">
+      <div id="result-mask" class="hide"></div>
+      <label><input id="search-key" type="text" autocomplete="off" placeholder="搜索"></label>
+      <div id="result-wrap" class="hide">
+        <div id="search-result"></div>
+      </div>
+      <div class="hide">
+        <template id="search-tpl">
+          <div class="item">
+            <a href="/{path}" title="{title}">
+              <div class="title">{title}</div>
+              <div class="time">{date}</div>
+              <div class="tags">{tags}</div>
+            </a>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  <article id="post-软件设计师/存储系统/1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/1/">主存地址与cache地址之间的转换工作由（）完成</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T05:50:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/">存储系统</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/1/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="位于CPU与主存之间的高速缓冲存储器（Cache）用于存放部分主存数据的拷贝，主存地址与cache地址之间的转换工作由（）完成"><a href="#位于CPU与主存之间的高速缓冲存储器（Cache）用于存放部分主存数据的拷贝，主存地址与cache地址之间的转换工作由（）完成" class="headerlink" title="位于CPU与主存之间的高速缓冲存储器（Cache）用于存放部分主存数据的拷贝，主存地址与cache地址之间的转换工作由（）完成"></a>位于CPU与主存之间的高速缓冲存储器（Cache）用于存放部分主存数据的拷贝，主存地址与cache地址之间的转换工作由（）完成</h4><pre><code class="markdown">
+A、硬件
+B、软件
+C、用户
+D、程序员
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选A</p>
+<p>从cache-主存层次实现的目标看 </p>
+<ol>
+<li>既要使CPU的访存速度接近于访cache的速度</li>
+<li>用户程序提供的运行空间应保持为主存容量大小的存储空间</li>
+</ol>
+<p>在采用cache-主存层次的系统中，cache对用户程序而言是透明的。<br>也就是说，用户程序可以不需要知道cache的存在。<br>因此，CPU每次访存时，依然和未使用cache的情况一样，给出的是一个主存地址。</p>
+<p>但在cache-主存结构中，CPU首先访问的是cache，并不是主存。<br>为此，需要一种机制将CPU的访主存地址转换成访cache地址，这个处理过程对速度要求非常高，因此其是完全由硬件来完成。</p>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/page/3/index.html">https://pan-jf.github.io/page/3/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPU/" rel="tag">CPU</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cache/" rel="tag">Cache</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%B8%BB%E5%AD%98/" rel="tag">主存</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" rel="tag">存储器</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/计算机基本工作原理/3" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/3/">将指令中的地址码送入（）</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T05:40:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/3/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="若某条无条件转移汇编指令采用直接寻址，则该指令的功能是将指令中的地址码送入（）"><a href="#若某条无条件转移汇编指令采用直接寻址，则该指令的功能是将指令中的地址码送入（）" class="headerlink" title="若某条无条件转移汇编指令采用直接寻址，则该指令的功能是将指令中的地址码送入（）"></a>若某条无条件转移汇编指令采用直接寻址，则该指令的功能是将指令中的地址码送入（）</h4><pre><code class="markdown">
+A、程序计数器（PC）
+B、地址寄存器（AR）
+C、累加器（AC）
+D、算术逻辑运算单元（ALU）
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选A</p>
+<p>程序计数器是用于存放下一条指令所在单元地址的地方。</p>
+<p>在程序执行前，必须将程序的起始地址，即程序的一条指令所在的内存单元地址送入程序计数器。</p>
+<p>当执行命令时，CPU将自动修改程序计数器的内容，即每执行一条指令，程序计数器增加一个量，使其指向下一个待指向的指令。</p>
+<p>程序的转移等操作也是通过该寄存器来实现的。</p>
+<h5 id="其他选项解析"><a href="#其他选项解析" class="headerlink" title="其他选项解析"></a>其他选项解析</h5><ol>
+<li>地址寄存器一般用来保存当前CPU所访问的内存单元的地址，以方便对内存的读写操作。</li>
+<li>累加器是专门存放算术或者逻辑运算的一个操作数和运算结果的寄存器</li>
+<li>ALU是CPU的执行单元，主要负责运算工作</li>
+</ol>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/page/3/index.html">https://pan-jf.github.io/page/3/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPU/" rel="tag">CPU</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" rel="tag">程序计数器</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/计算机基本工作原理/2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/2/">在CPU中用于跟踪指令地址的寄存器是（）</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T03:39:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/2/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="在CPU中用于跟踪指令地址的寄存器是（）"><a href="#在CPU中用于跟踪指令地址的寄存器是（）" class="headerlink" title="在CPU中用于跟踪指令地址的寄存器是（）"></a>在CPU中用于跟踪指令地址的寄存器是（）</h4><pre><code class="markdown">
+A、地址寄存器（MAR）
+B、数据寄存器（MDR）
+C、程序计数器（PC）
+D、指令寄存器（IR）
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选C</p>
+<p>程序计数器是用于存放下一条指令所在单元地址的地方。</p>
+<p>在程序执行前，必须将程序的起始地址，即程序的一条指令所在的内存单元地址送入程序计数器。</p>
+<p>当执行命令时，CPU将自动修改程序计数器的内容，即每执行一条指令，程序计数器增加一个量，使其指向下一个待指向的指令。</p>
+<p>程序的转移等操作也是通过该寄存器来实现的。</p>
+<p>因此CPU中跟踪指令地址的是程序计数器（PC）。</p>
+<h5 id="其他选项解析"><a href="#其他选项解析" class="headerlink" title="其他选项解析"></a>其他选项解析</h5><ol>
+<li>指令寄存器一般是用来保存当前正在执行的一条指令</li>
+<li>数据寄存器主要是用来保存操作数和运算结果等信息的，其目的是为了节省读取操作数所需占用总线和访问存储器的时间。</li>
+<li>地址寄存器一般用来保存当前CPU所访问的内存单元的地址，以方便对内存的读写操作。</li>
+</ol>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/page/3/index.html">https://pan-jf.github.io/page/3/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPU/" rel="tag">CPU</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">寄存器</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" rel="tag">程序计数器</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/输入输出系统/1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/1/">输入输出控制方法中，采用（）无需CPU干预</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T03:19:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/">输入输出系统</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/1/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="在输入输出控制方法中，采用（）可以使得设备与主存间的数据块传送无需CPU干预。"><a href="#在输入输出控制方法中，采用（）可以使得设备与主存间的数据块传送无需CPU干预。" class="headerlink" title="在输入输出控制方法中，采用（）可以使得设备与主存间的数据块传送无需CPU干预。"></a>在输入输出控制方法中，采用（）可以使得设备与主存间的数据块传送无需CPU干预。</h4><pre><code class="markdown">
+A、程序控制输入输出
+B、中断
+C、DMA
+D、总线控制
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选C</p>
+<p>计算机中主机与外设间进行数据传输的输入输出控制方法有程序控制方式、中断方式、DMA等。</p>
+<h5 id="程序控制方式"><a href="#程序控制方式" class="headerlink" title="程序控制方式"></a>程序控制方式</h5><p>在程序控制方式下，由CPU执行程序控制数据的输入输出过程。</p>
+<h5 id="中断方式"><a href="#中断方式" class="headerlink" title="中断方式"></a>中断方式</h5><p>在中断方式下，外设准备好输入数据或接收数据时向CPU发出中断请求信号，则暂停正在执行的任务。<br>若CPU决定响应该请求，则暂停正在执行的任务，转而执行中断服务程序进行数据的输入输出处理，之后再回去执行原来被中断的任务。</p>
+<h5 id="DMA"><a href="#DMA" class="headerlink" title="DMA"></a>DMA</h5><p>在DMA方式下，CPU只需向DMA控制器下达指令，让DMA控制器来处理数据的传送，数据传送完毕再把信息反馈给CPU，这样就很大程度上减轻CPU的负担，可以大大节省系统资源</p>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/page/3/index.html">https://pan-jf.github.io/page/3/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPU/" rel="tag">CPU</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DMA/" rel="tag">DMA</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/指令系统和计算机体系结构/2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/2/">为实现程序指令的顺序执行，CPU（）中的值将自动加1</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T02:38:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/2/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="为实现程序指令的顺序执行，CPU（）中的值将自动加1"><a href="#为实现程序指令的顺序执行，CPU（）中的值将自动加1" class="headerlink" title="为实现程序指令的顺序执行，CPU（）中的值将自动加1"></a>为实现程序指令的顺序执行，CPU（）中的值将自动加1</h4><pre><code class="markdown">
+A、指令寄存器（IR）
+B、程序计数器（PC）
+C、地址寄存器（AR）
+D、指令译码器（ID）
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选B</p>
+<h5 id="CPU执行指令过程"><a href="#CPU执行指令过程" class="headerlink" title="CPU执行指令过程"></a>CPU执行指令过程</h5><ol>
+<li>当执行一条指令时，先把它从内存取到<code>数据寄存器（DR）</code>中，然后再传送至<code> 指令寄存器（IR）</code>。</li>
+<li><code>指令寄存器（IR）</code>保存当前正在执行的指令,然后再传送至<code>指令译码器（ID）</code>。</li>
+<li>为了执行任何给定的指令，<code>指令译码器（ID）</code>对操作码进行译码，并向操作控制器发出具体操作的特定信号。</li>
+<li>在操作期间，<code>地址寄存器（AR）</code>用来保存当前CPU所访问的内存单元的地址。由于在内存和CPU之间存在着操作速度上的差别，所以必须使用地址寄存器来保持地址信息，直到内存的读写操作完成为止。</li>
+<li>为了保证程序指令能够连续地执行下去，<code>程序计数器（PC）</code>来确定下一条指令的地址，所以又称为指令计数器。</li>
+</ol>
+<h5 id="程序计数器工作过程"><a href="#程序计数器工作过程" class="headerlink" title="程序计数器工作过程"></a>程序计数器工作过程</h5><ol>
+<li>在程序开始执行前，必须将它的起始地址，即程序的一条指令所在的内存单元地址送入PC，因此<code>程序计数器（PC）</code>的内容即是从内存提取的第一条指令的地址。</li>
+<li>当执行指令时，CPU将自动修改PC的内容，即每执行一条指令PC增加一个量，这个量等于指令所含的字节数，以便使其保持的总是将要执行的下一条指令的地址。</li>
+<li>由于大多数指令都是按顺序来执行的，所以修改的过程通常只是简单的对PC加1</li>
+</ol>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/page/3/index.html">https://pan-jf.github.io/page/3/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPU/" rel="tag">CPU</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" rel="tag">程序计数器</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/指令系统和计算机体系结构/1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/1/">以下关于CPU的叙述中，错误的是（）</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T02:13:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/1/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="以下关于CPU的叙述中，错误的是（）"><a href="#以下关于CPU的叙述中，错误的是（）" class="headerlink" title="以下关于CPU的叙述中，错误的是（）"></a>以下关于CPU的叙述中，错误的是（）</h4><pre><code class="markdown">
+A、CPU产生每条指令的操作信号并将操作信号送往相应的部件进行控制
+B、程序计数器PC除了存放指令地址，也可以临时存储算术/逻辑运算结果
+C、CPU中的控制器决定计算及运行过程的自动化
+D、指令译码器是CPU控制器中的部件
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选B</p>
+<p>CPU是计算机的控制中心，主要由<code>运算器</code>、<code>控制器</code>、<code>寄存器组</code>和<code>内部总线</code>等部件组成。</p>
+<h5 id="控制器"><a href="#控制器" class="headerlink" title="控制器"></a>控制器</h5><p>控制器由<code>程序计数器</code>、<code>指令寄存器</code>、<code>指令译码器</code>、<code>时序产生器</code>和<code>操作控制器</code>组成，它是发布命令的“决策机构”。即完成协调和指挥整个计算机系统的操作。</p>
+<p>它的主要功能有：</p>
+<ol>
+<li>从内存中取出一条指令，并指出下一条指令在内存中的位置</li>
+<li>对指令进行编码或者测试，并产生相应的操作控制信号，以便启动规定的动作</li>
+<li>指挥并控制CPU、内存和输入输出设备之间数据的流动</li>
+</ol>
+<h6 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h6><p>程序计数器（PC）是专用寄存器，具有<code>寄存信息</code>和<code>计数</code>两种功能，又称为指令计数器。</p>
+<p>在程序开始执行前，将程序的起始地址送入PC，该地址在程序加载到内存时确定，因此PC的初始内容即是第一条指令的地址。</p>
+<p>执行指令时，CPU将自动修改PC的内容，以便使其保持的总是将要执行的下一条指令的地址。</p>
+<p>由于大多数指令都是按顺序执行的，因此修改的过程通常只是简单地对PC加1。</p>
+<p>当遇到转移指令时，后继指令的地址根据当前指令的地址加上一个向前或向后转移的位移量得到，或者根据转移指令给出的直接转移的地址得到。</p>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/page/3/index.html">https://pan-jf.github.io/page/3/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPU/" rel="tag">CPU</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/计算机基本工作原理/1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/08/31/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/1/">海明检验码——n与k的关系是（）</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-08-31T13:00:00.000Z" itemprop="datePublished">2022年08月31日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a>
+  </div>
+
+      
+      
+<a href="/2022/08/31/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/1/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="海明检验码是在n个数据位之外增设k个校验位，从而形成一个k-n位的新的码字，使新的码字的码距比较均匀地拉大。n与k的关系是（）"><a href="#海明检验码是在n个数据位之外增设k个校验位，从而形成一个k-n位的新的码字，使新的码字的码距比较均匀地拉大。n与k的关系是（）" class="headerlink" title="海明检验码是在n个数据位之外增设k个校验位，从而形成一个k+n位的新的码字，使新的码字的码距比较均匀地拉大。n与k的关系是（）"></a>海明检验码是在n个数据位之外增设k个校验位，从而形成一个k+n位的新的码字，使新的码字的码距比较均匀地拉大。n与k的关系是（）</h4><pre><code class="markdown">A、2^k - 1 &gt;= n + k
+B、2^n - 1 &lt;= n+k
+C、n=k
+D、n-1 &lt;= k
+</code></pre>
+<h4 id="解析："><a href="#解析：" class="headerlink" title="解析："></a>解析：</h4><p>选A</p>
+<p>海明码是一种多重（复式）奇偶检错编码。</p>
+<p>它将信息用逻辑形式编码，以便能检错和纠错。</p>
+<p>用在海明码中的全部传输码字是由原来的信息和附加的奇偶检验位组成的。</p>
+<p>每一个这种奇偶位被编在传输码字的特定位置上。</p>
+<p>推导并使用长度为n位的码字的海明码，所需步骤如下：</p>
+<ol>
+<li>确定最小的校验位数k，将他们记成D1、D2、… 、Dk,每个校验位符合不同的奇偶测试规定。</li>
+<li>原有信息和k个校验位一起编成长为<code>n+k</code>位的新码字。选择k检验位（0或者1）需满足必要的奇偶条件。</li>
+<li>对所接收的信息作所需的k个奇偶检查。</li>
+<li>如果所有的奇偶检查结果均正确，则认为信息无错误。如果发现一个或多个错了，则错误的位由这些检查的结果来唯一地确定。<br>求海明码时的一项基本考虑是确定所需最少的校验位数k。<br>考虑长度为n位的信息，且附加了k个校验位，则所发送的总长度为n+k。<br>在接收器中要进行k个奇偶检查，每个检查结果或是真或是假。这个奇偶检查的结果可以表示为一个k位的二进制，它可以确定最多<code>2^k</code>种不同状态。<br>这些状态中必有一个其所有奇偶测试都是真的，它便是判定信息正确的条件。于是剩下的（<code>2^k-1</code>）种状态，可以用来判断误码的位置，于是导出以下关系：<br><code>2^k-1&gt;=n+k</code></li>
+</ol>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/page/3/index.html">https://pan-jf.github.io/page/3/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" rel="tag">海明检验码</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-hexo" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/08/23/hexo/">hexo</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-08-23T01:15:22.000Z" itemprop="datePublished">2022年08月23日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/hexo/">hexo</a>
+  </div>
+
+      
+      
+<a href="/2022/08/23/hexo/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
+</code></pre>
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
+</code></pre>
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
+</code></pre>
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
+</code></pre>
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+        
+        
+          <blockquote id="copyright">
+              <p>原文链接: <a href="https://pan-jf.github.io/page/3/index.html">https://pan-jf.github.io/page/3/index.html</a></p>
+              <p>版权声明: 转载请注明出处.</p>
+          </blockquote>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
+
+          
+    <div class="social-share">
+      <span>分享到:</span>
+    </div>
+
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+
+    <nav id="page-nav">
+
+<a class="extend prev" rel="prev" href="/page/2/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+</nav>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title"><i class="fa fa-posts"></i> 最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/09/03/golang/context/1/">context包底层及面试题</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/4/">主存与cache的地址映射方式</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/12/">CPU对其访问速度最快的是（）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/11/">定点整数的最大值为（）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/10/">指令寄存器的位数取决于（）</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title"><i class="fa fa-tag"></i> 标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CISC/" style="font-size: 10px;">CISC</a> <a href="/tags/CPU/" style="font-size: 20px;">CPU</a> <a href="/tags/CRC/" style="font-size: 10px;">CRC</a> <a href="/tags/Cache/" style="font-size: 10px;">Cache</a> <a href="/tags/DMA/" style="font-size: 13.33px;">DMA</a> <a href="/tags/RISC/" style="font-size: 10px;">RISC</a> <a href="/tags/VLIW/" style="font-size: 10px;">VLIW</a> <a href="/tags/context/" style="font-size: 10px;">context</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" style="font-size: 10px;">中断向量</a> <a href="/tags/%E4%B8%BB%E5%AD%98/" style="font-size: 13.33px;">主存</a> <a href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">地址映射方式</a> <a href="/tags/%E5%AD%97%E9%95%BF/" style="font-size: 10px;">字长</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" style="font-size: 10px;">存储单元</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" style="font-size: 13.33px;">存储器</a> <a href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">寄存器</a> <a href="/tags/%E6%80%BB%E7%BA%BF/" style="font-size: 10px;">总线</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" style="font-size: 10px;">指令周期</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">指令寄存器</a> <a href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" style="font-size: 10px;">海明检验码</a> <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" style="font-size: 16.67px;">程序计数器</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" style="font-size: 10px;">系统可靠度</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" style="font-size: 10px;">累加器</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">累加寄存器</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 13.33px;">补码</a> <a href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" style="font-size: 10px;">防火墙</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title"><i class="fa fa-classify"></i> 分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%92%8C%E7%97%85%E6%AF%92%E9%98%B2%E6%8A%A4/">信息安全和病毒防护</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/">存储系统</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%9F%BA%E7%A1%80/">系统性能评测和可靠性基础</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/">输入输出系统</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title"><i class="fa fa-archive"></i> 归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022年</a><span class="archive-list-count">28</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title"><i class="fa fa-tag"></i> 标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CISC/" rel="tag">CISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPU/" rel="tag">CPU</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CRC/" rel="tag">CRC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cache/" rel="tag">Cache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DMA/" rel="tag">DMA</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RISC/" rel="tag">RISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VLIW/" rel="tag">VLIW</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/context/" rel="tag">context</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" rel="tag">中断向量</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E5%AD%98/" rel="tag">主存</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" rel="tag">地址映射方式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%97%E9%95%BF/" rel="tag">字长</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" rel="tag">存储单元</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" rel="tag">存储器</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%BB%E7%BA%BF/" rel="tag">总线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" rel="tag">指令周期</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">指令寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" rel="tag">海明检验码</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" rel="tag">程序计数器</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" rel="tag">系统可靠度</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" rel="tag">累加器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">累加寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%A1%A5%E7%A0%81/" rel="tag">补码</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" rel="tag">防火墙</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title"><i class="fa fa-link"></i> 友情链接</h3>
+    <div class="widget">
+      <ul>
+      
+        <li>
+          <a target="_blank" rel="noopener" href="http://www.example1.com/">site-name1</a>
+        </li>
+      
+        <li>
+          <a target="_blank" rel="noopener" href="http://www.example2.com/">site-name2</a>
+        </li>
+      
+        <li>
+          <a target="_blank" rel="noopener" href="http://www.example3.com/">site-name3</a>
+        </li>
+      
+      </ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+        
+      </div>
+      <a id="totop" href="#top"></a>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      <p>
+        <a href="/sitemap.xml">网站地图</a>
+        <span> | </span><a href="/atom.xml">订阅本站</a>
+        <span> | </span><a href="/about/">联系博主</a>
+      </p>
+      
+        <p>
+          <i class="fa fa-visitors"></i>
+          <i id="busuanzi_container_site_uv"><i id="busuanzi_value_site_uv"></i></i>
+          ，
+          <i class="fa fa-views"></i>
+          <i id="busuanzi_container_site_pv"><i id="busuanzi_value_site_pv"></i></i>
+        </p>
+      
+      <p>
+        <span>Copyright &copy; 2022 pan-jf.</span>
+        <span>Theme by <a href="https://github.com/chaooo/hexo-theme-BlueLake/" target="_blank">BlueLake.</a></span>
+        <span>Powered by <a href="https://hexo.io/" target="_blank">Hexo.</a></span>
+      </p>
+    </div>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/search.json.js"></script>
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+
+  
+<script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+
+  
+
+
+
+</body>
+</html>
