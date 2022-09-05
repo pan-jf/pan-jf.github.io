@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>七月七日晴</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  
+  
+    <link rel="alternate" href="/atom.xml" title="七月七日晴" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">七月七日晴</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        
+          <a class="main-nav-link" href="/."><i class="fa fa-home"></i> 首页</a>
+        
+          <a class="main-nav-link" href="/archives/"><i class="fa fa-archive"></i> 归档</a>
+        
+          <a class="main-nav-link" href="/about/"><i class="fa fa-user"></i> 关于</a>
+        
+      </nav>
+    </div>
+    <div id="search-form">
+      <div id="result-mask" class="hide"></div>
+      <label><input id="search-key" type="text" autocomplete="off" placeholder="搜索"></label>
+      <div id="result-wrap" class="hide">
+        <div id="search-result"></div>
+      </div>
+      <div class="hide">
+        <template id="search-tpl">
+          <div class="item">
+            <a href="/{path}" title="{title}">
+              <div class="title">{title}</div>
+              <div class="time">{date}</div>
+              <div class="tags">{tags}</div>
+            </a>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  <article id="post-软件设计师/计算机基本工作原理/9" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/9/">循环冗余校验码</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-02T02:20:22.000Z" itemprop="datePublished">2022年09月02日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a>
+  </div>
+
+      
+      
+<a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/9/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="循环冗余校验码（CRC）利用生成多项式进行编码。设数据位为k位，校验位为r位，则CRC码的格式为（）"><a href="#循环冗余校验码（CRC）利用生成多项式进行编码。设数据位为k位，校验位为r位，则CRC码的格式为（）" class="headerlink" title="循环冗余校验码（CRC）利用生成多项式进行编码。设数据位为k位，校验位为r位，则CRC码的格式为（）"></a>循环冗余校验码（CRC）利用生成多项式进行编码。设数据位为k位，校验位为r位，则CRC码的格式为（）</h4><pre><code class="markdown">
+A、k个数据位之后跟r个校验位
+B、r个校验位之后跟k个数据位
+C、r个校验位随机加入k个数据位中
+D、r个校验位等间隔地加入k个数据位中
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选A</p>
+<p>计算机系统运行时，各个部件之间要进行数据交换，为了确保数据在传送过程中正确无误。</p>
+<ol>
+<li>提高硬件电器的可靠性</li>
+<li>提高代码的校验能力，包括查错和纠错。</li>
+</ol>
+<p>常用的三种校验码：奇偶校验码，海明码和循环冗余校验码</p>
+<p>循环冗余校验码广泛应用于数据通信领域和磁介质存储系统中。它利用生成多项式为k个数据位产生r个校验位来进行编码。</p>
+<p>编码长度为k+r。CRC的代码格式为</p>
+<p><img src="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/9/crc.jpg" alt="crc"></p>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CRC/" rel="tag">CRC</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/存储系统/3" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/3/">存储单元计算</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T11:42:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/">存储系统</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/3/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="内存单元按字节编址，地址0000A000H-0000BFFFH共有（）个存储单元"><a href="#内存单元按字节编址，地址0000A000H-0000BFFFH共有（）个存储单元" class="headerlink" title="内存单元按字节编址，地址0000A000H~0000BFFFH共有（）个存储单元"></a>内存单元按字节编址，地址0000A000H~0000BFFFH共有（）个存储单元</h4><pre><code class="markdown">
+A、8192K
+B、1024K
+C、13K
+D、8K
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选D</p>
+<p>每个地址编号为一个存储单元（容量为1个字节）</p>
+<p>地址区间 0000A000H~0000BFFFH 共有1FFF + 1个地址编号。</p>
+<p>1FFF + 1 &#x3D; 2000(16进制) &#x3D; 16^3 * 2 (10进制)&#x3D; 2^(4*3) * 2 - 2^(12+1) &#x3D; 2^13 byte</p>
+<p>1个字节： 1k &#x3D; 1024byte &#x3D; 2^10</p>
+<p>结果 &#x3D; 2^13 &#x2F; 2^10 &#x3D; 2^(13-10) &#x3D; 2^3 &#x3D; 8k</p>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" rel="tag">存储单元</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/计算机基本工作原理/8" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/8/">补码最大表示范围</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T11:23:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/8/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="若某计算机采用8位整数补码表示数据，则运算（）将产生溢出"><a href="#若某计算机采用8位整数补码表示数据，则运算（）将产生溢出" class="headerlink" title="若某计算机采用8位整数补码表示数据，则运算（）将产生溢出"></a>若某计算机采用8位整数补码表示数据，则运算（）将产生溢出</h4><pre><code class="markdown">
+A、-127+1
+B、-127-1
+C、127+1
+D、127-1
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选C</p>
+<p>采用8位补码表示整型数据时，可表示的数据范围为 -128~127，因此进行127+1运算会产生溢出。</p>
+<p>最大表示的正整数为</p>
+<p>补码 01111111 -&gt; 原码为 2^8-1 &#x3D; 127</p>
+<p>最大表示的负整数为</p>
+<p>补码 10000000 -&gt; 原码为 -128</p>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%A1%A5%E7%A0%81/" rel="tag">补码</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/系统性能评测和可靠性基础/1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%9F%BA%E7%A1%80/1/">系统可靠度计算</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T10:20:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%9F%BA%E7%A1%80/">系统性能评测和可靠性基础</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%9F%BA%E7%A1%80/1/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="某计算机系统由下面所示的部件构成，假定每个部件的千小时可靠度都为R，则该系统的千小时可靠度为（）"><a href="#某计算机系统由下面所示的部件构成，假定每个部件的千小时可靠度都为R，则该系统的千小时可靠度为（）" class="headerlink" title="某计算机系统由下面所示的部件构成，假定每个部件的千小时可靠度都为R，则该系统的千小时可靠度为（）"></a>某计算机系统由下面所示的部件构成，假定每个部件的千小时可靠度都为R，则该系统的千小时可靠度为（）</h4><p><img src="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%9F%BA%E7%A1%80/1/bujian.jpg" alt="部件分布图"></p>
+<pre><code class="markdown">
+A、R + 2R / 4
+B、R + R^2 / 4
+C、R(1-(1-R)^2)
+D、R(1-(1-R)^2)^2
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选D</p>
+<p>由于系统构成串联系统时，其中任何一个子系统失效就足以使系统失效，其可靠度等于各子系统可靠度的乘积。</p>
+<p>构成并联系统时，只要有一个子系统正常工作，系统就能正常工作。设每个子系统的可靠性分别以R1,R2, … ,Rn表示，则整个系统的可靠度表达为</p>
+<pre><code class="markdown">R = 1 - (1-R1)(1-R2) ... (1-Rn)
+</code></pre>
+<p>因此，本系统的可靠度计算分以下部分</p>
+<ol>
+<li>最左边的为R</li>
+<li>中间的为 <code>1 - (1-R)(1-R)</code> &#x3D; <code>1 - (1-R)^2</code></li>
+<li>右边的为 <code>1 - (1-R)(1-R)</code> &#x3D; <code>1 - (1-R)^2</code></li>
+<li>串联相乘得出 R(1 - (1-R)^2) ^2</li>
+</ol>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" rel="tag">系统可靠度</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/指令系统和计算机体系结构/5" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/5/">CISC和RISC的描述</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T10:16:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/5/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="以下关于CISC和RISC的叙述中，错误的是（）"><a href="#以下关于CISC和RISC的叙述中，错误的是（）" class="headerlink" title="以下关于CISC和RISC的叙述中，错误的是（）"></a>以下关于CISC和RISC的叙述中，错误的是（）</h4><pre><code class="markdown">
+A、在CISC中，其复杂指令都采用硬布线逻辑来执行
+B、采用CIBS技术的CPU，其芯片设计复杂度更高
+C、在RISC中，更适合采用硬布线逻辑执行指令
+D、采用RISC技术，指令系统中的指令种类和寻址方式更少
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选A</p>
+<p>CISC (complex instruction set computer) 复杂指令集计算机，它的基本思想是</p>
+<ol>
+<li>进一步增强原有指令的功能，用更为复杂的新指令取代原先由软件子程序完成的功能</li>
+<li>实现软件功能的硬件化，导致机器的指令系统越来越庞大而复杂</li>
+<li>CISC计算机一般所含的指令数目至少300条以上，有的甚至超过500条</li>
+</ol>
+<p>RISC (reduced insstruction set computer) 精简指令集计算机，它的基本思想是</p>
+<ol>
+<li>通过减少指令总数和简化指令功能，降低硬件设计的复杂度</li>
+<li>指令能单周期执行，并通过优化编译提高指令的执行速度</li>
+<li>采用硬布线控制逻辑优化编程程序</li>
+</ol>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CISC/" rel="tag">CISC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RISC/" rel="tag">RISC</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/指令系统和计算机体系结构/4" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/4/">常将源操作数和结果暂存在（）中</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T09:54:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/4/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="CPU执行算术运算或者逻辑运算时，常将源操作数和结果暂存在（）中"><a href="#CPU执行算术运算或者逻辑运算时，常将源操作数和结果暂存在（）中" class="headerlink" title="CPU执行算术运算或者逻辑运算时，常将源操作数和结果暂存在（）中"></a>CPU执行算术运算或者逻辑运算时，常将源操作数和结果暂存在（）中</h4><pre><code class="markdown">
+A、程序计数器（PC）
+B、累加器（AC）
+C、指令寄存器（IR）
+D、地址寄存器（AR）
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选B</p>
+<ol>
+<li><code>程序计数器</code>的作用是保存待读取指令在内存中的地址</li>
+<li><code>累加器</code>是算术逻辑运算单元中用来暂存源操作数和计算结果的寄存器</li>
+<li><code>指令寄存器</code>暂存从内存读取的指令</li>
+<li><code>地址寄存器</code>暂存要访问的内存单元的地址</li>
+</ol>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPU/" rel="tag">CPU</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" rel="tag">累加器</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/计算机基本工作原理/7" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/7/">有符号定点小数</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T09:49:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/7/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="在程序运行过程中，CPU需要将指令从内存中取出并加以分析和执行。CPU依据（）来区分在内存中以二进制编码形式存放的指令和数据"><a href="#在程序运行过程中，CPU需要将指令从内存中取出并加以分析和执行。CPU依据（）来区分在内存中以二进制编码形式存放的指令和数据" class="headerlink" title="在程序运行过程中，CPU需要将指令从内存中取出并加以分析和执行。CPU依据（）来区分在内存中以二进制编码形式存放的指令和数据"></a>在程序运行过程中，CPU需要将指令从内存中取出并加以分析和执行。CPU依据（）来区分在内存中以二进制编码形式存放的指令和数据</h4><pre><code class="markdown">
+A、指令周期的不同阶段
+B、指令和数据的寻址方式
+C、指令操作码的译码结果
+D、指令和数据所在的存储单元
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选A</p>
+<p>指令周期是执行一条指令所需要的时间。</p>
+<p>一般由若干个机器周期组成。是从取指令、分析指令到执行完所需的全部时间。</p>
+<p>CPU执行指令的过程中，根据时序部件发出的时钟信号按部就班进行操作。</p>
+<p>在取指令阶段读取的是指令，在分析指令和执行指令时，需要操作数时再去读操作数。</p>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPU/" rel="tag">CPU</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" rel="tag">指令周期</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/信息安全和病毒防护/1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%92%8C%E7%97%85%E6%AF%92%E9%98%B2%E6%8A%A4/1/">防火墙功能特性</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T09:43:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%92%8C%E7%97%85%E6%AF%92%E9%98%B2%E6%8A%A4/">信息安全和病毒防护</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%92%8C%E7%97%85%E6%AF%92%E9%98%B2%E6%8A%A4/1/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="以下关于防火墙功能特性的叙述中，不正确的是（）"><a href="#以下关于防火墙功能特性的叙述中，不正确的是（）" class="headerlink" title="以下关于防火墙功能特性的叙述中，不正确的是（）"></a>以下关于防火墙功能特性的叙述中，不正确的是（）</h4><pre><code class="markdown">
+A、控制进出网络的数据包和数据流向
+B、提供流量信息的日志和审计
+C、隐藏内部IP以及网络结构细节
+D、提供漏洞扫描功能
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选D</p>
+<p>防火墙最基本的功能就是控制在计算机网络中，不同信任程度区域间传送的数据流。</p>
+<p>防火墙对流经它的网络通信进行扫描，这样能够过滤掉一些攻击，以免其在目标计算机上被执行。</p>
+<p>隐藏内部细节。</p>
+<p>所有的访问都经过防火墙，防火墙就能记录下这些访问并作出日志记录，同事也能提供网络使用情况的统计数据。</p>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" rel="tag">防火墙</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/指令系统和计算机体系结构/3" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/3/">VLIW是（）的简称</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T09:35:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/3/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="VLIW是（）的简称"><a href="#VLIW是（）的简称" class="headerlink" title="VLIW是（）的简称"></a>VLIW是（）的简称</h4><pre><code class="markdown">
+A、复杂指令系统计算机
+B、超大规模集成电路
+C、单指令流多数据流
+D、超长指令字
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选D</p>
+<p>VLIW (very long instruction word),超长指令字。</p>
+<p>一种非常长的指令组合，它把许多条指令连在一起，增加了运算的速度。</p>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/VLIW/" rel="tag">VLIW</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/计算机基本工作原理/5" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/5/">计算机总线系统由（）组成</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T08:55:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/5/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="三总线结构的计算机总线系统由（）组成"><a href="#三总线结构的计算机总线系统由（）组成" class="headerlink" title="三总线结构的计算机总线系统由（）组成"></a>三总线结构的计算机总线系统由（）组成</h4><pre><code class="markdown">
+A、CPU总线、内存总线和IO总线
+B、数据总线、地址总线和控制总线
+C、系统总线、内部总线和外部总线
+D、串行总线、并行总线和PCI总线
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选B</p>
+<p>总线线路可以被归为三类</p>
+<ol>
+<li>数据总线</li>
+<li>地址总线</li>
+<li>控制总线</li>
+</ol>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%BB%E7%BA%BF/" rel="tag">总线</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+
+    <nav id="page-nav">
+
+<a class="extend prev" rel="prev" href="/">上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">下一页</a>
+</nav>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title"><i class="fa fa-posts"></i> 最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/09/03/golang/context/1/">context包底层及面试题</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/5/">CPU是在（）结束时响应DMA请求的</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/4/">BIOS保存在（）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/13/">浮点数对阶</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/6/">为从内存读取指令操作码，首先要将（）的内容送到地址总线上</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title"><i class="fa fa-tag"></i> 标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/BIOS/" style="font-size: 10px;">BIOS</a> <a href="/tags/CISC/" style="font-size: 10px;">CISC</a> <a href="/tags/CPU/" style="font-size: 20px;">CPU</a> <a href="/tags/CRC/" style="font-size: 10px;">CRC</a> <a href="/tags/Cache/" style="font-size: 10px;">Cache</a> <a href="/tags/DMA/" style="font-size: 15px;">DMA</a> <a href="/tags/RISC/" style="font-size: 10px;">RISC</a> <a href="/tags/VLIW/" style="font-size: 10px;">VLIW</a> <a href="/tags/context/" style="font-size: 10px;">context</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" style="font-size: 10px;">中断向量</a> <a href="/tags/%E4%B8%BB%E5%AD%98/" style="font-size: 12.5px;">主存</a> <a href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">地址映射方式</a> <a href="/tags/%E5%AD%97%E9%95%BF/" style="font-size: 10px;">字长</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" style="font-size: 10px;">存储单元</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" style="font-size: 12.5px;">存储器</a> <a href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">寄存器</a> <a href="/tags/%E6%80%BB%E7%BA%BF/" style="font-size: 10px;">总线</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" style="font-size: 10px;">指令周期</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">指令寄存器</a> <a href="/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/" style="font-size: 10px;">浮点数</a> <a href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" style="font-size: 10px;">海明检验码</a> <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" style="font-size: 17.5px;">程序计数器</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" style="font-size: 10px;">系统可靠度</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" style="font-size: 10px;">累加器</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">累加寄存器</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 12.5px;">补码</a> <a href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" style="font-size: 10px;">防火墙</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title"><i class="fa fa-classify"></i> 分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%92%8C%E7%97%85%E6%AF%92%E9%98%B2%E6%8A%A4/">信息安全和病毒防护</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/">存储系统</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%9F%BA%E7%A1%80/">系统性能评测和可靠性基础</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/">输入输出系统</a><span class="category-list-count">5</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title"><i class="fa fa-archive"></i> 归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022年</a><span class="archive-list-count">32</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title"><i class="fa fa-tag"></i> 标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BIOS/" rel="tag">BIOS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CISC/" rel="tag">CISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPU/" rel="tag">CPU</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CRC/" rel="tag">CRC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cache/" rel="tag">Cache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DMA/" rel="tag">DMA</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RISC/" rel="tag">RISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VLIW/" rel="tag">VLIW</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/context/" rel="tag">context</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" rel="tag">中断向量</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E5%AD%98/" rel="tag">主存</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" rel="tag">地址映射方式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%97%E9%95%BF/" rel="tag">字长</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" rel="tag">存储单元</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" rel="tag">存储器</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%BB%E7%BA%BF/" rel="tag">总线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" rel="tag">指令周期</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">指令寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/" rel="tag">浮点数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" rel="tag">海明检验码</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" rel="tag">程序计数器</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" rel="tag">系统可靠度</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" rel="tag">累加器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">累加寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%A1%A5%E7%A0%81/" rel="tag">补码</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" rel="tag">防火墙</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+</aside>
+        
+      </div>
+      <a id="totop" href="#top"></a>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+<!--      <p>-->
+<!--        <a href="/sitemap.xml">网站地图</a>-->
+<!--        <span> | </span><a href="/atom.xml">订阅本站</a>-->
+<!--        <span> | </span><a href="/about/">联系博主</a>-->
+<!--      </p>-->
+      
+      <p>
+        <span>Copyright &copy; 2022 pan-jf.</span>
+        <span>Theme by <a href="https://github.com/chaooo/hexo-theme-BlueLake/" target="_blank">BlueLake.</a></span>
+        <span>Powered by <a href="https://hexo.io/" target="_blank">Hexo.</a></span>
+      </p>
+    </div>
+  </div>
+</footer>
+
+    </div>
+  </div>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/search.json.js"></script>
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+</body>
+</html>
