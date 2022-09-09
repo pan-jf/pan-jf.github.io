@@ -73,6 +73,255 @@
 
       <div class="outer">
         <section id="main">
+  <article id="post-golang/sync/1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/05/golang/sync/1/">sync包之Mutex和RWMutex</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-05T12:35:22.000Z" itemprop="datePublished">2022年09月05日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/Golang/">Golang</a>
+  </div>
+
+      
+      
+<a href="/2022/09/05/golang/sync/1/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Mutex和RWMutex"><a href="#Mutex和RWMutex" class="headerlink" title="Mutex和RWMutex"></a>Mutex和RWMutex</h2><p><code>Mutex</code>可以看做是锁，而<code>RWMutex</code>则是读写锁。</p>
+<p>一般用法是将<code>Mutex</code>或者<code>RWMutex</code>和需要被保护住的资源封装在一个结构体内</p>
+<ul>
+<li>如果有多个<code>goroutine</code>同时读写的资源，就一定要保护起来</li>
+<li>如果多个<code>goroutine</code>只读某个资源，则就不需要保护</li>
+</ul>
+<p>使用锁的时候，优先使用<code>RWMuteex</code>。</p>
+<h3 id="RWMutex核心方法"><a href="#RWMutex核心方法" class="headerlink" title="RWMutex核心方法"></a>RWMutex核心方法</h3><ul>
+<li>RLock</li>
+<li>RUnlock</li>
+<li>Lock</li>
+<li>Unlock</li>
+</ul>
+<h3 id="Mutex核心方法"><a href="#Mutex核心方法" class="headerlink" title="Mutex核心方法"></a>Mutex核心方法</h3><ul>
+<li>Lock</li>
+<li>Unlock</li>
+</ul>
+<h3 id="例子：实现map的线程安全的封装"><a href="#例子：实现map的线程安全的封装" class="headerlink" title="例子：实现map的线程安全的封装"></a>例子：实现map的线程安全的封装</h3><pre><code class="golang">
+func TestSafeMap(t *testing.T) &#123;
+    var sTest = SafeMap&#123;
+        m:     make(map[string]int, 0),
+        mutex: sync.RWMutex&#123;&#125;,
+    &#125;
+    var wg sync.WaitGroup
+    for i := 0; i &lt; 10; i++ &#123;
+        wg.Add(1)
+        go func() &#123;
+            defer wg.Done()
+            for j := 0; j &lt; 100; j++ &#123;
+                sTest.LoadOrStore(fmt.Sprintf(&quot;s_%d&quot;, j), j)
+                // fatal error: concurrent map writes
+                //sTest.NotSafe(fmt.Sprintf(&quot;s_%d&quot;, j), j)
+            &#125;
+        &#125;()
+    &#125;
+
+    wg.Wait()
+    fmt.Println(sTest.m)
+
+&#125;
+
+type SafeMap struct &#123;
+    m     map[string]int
+    mutex sync.RWMutex
+&#125;
+
+func (s *SafeMap) NotSafe(key string, value int) (val int, loaded bool) &#123;
+    s.m[key] = value
+    return value, false
+&#125;
+
+func (s *SafeMap) LoadOrStore(key string, value int) (val int, loaded bool) &#123;
+    s.mutex.RLock()
+    val, ok := s.m[key]
+    s.mutex.RUnlock()
+    if ok &#123;
+        return val, true
+    &#125;
+    s.mutex.Lock()
+    defer s.mutex.Unlock()
+    val, ok = s.m[key]
+    if ok &#123;
+        return val, true
+    &#125;
+    s.m[key] = value
+    return value, false
+&#125;
+
+</code></pre>
+<blockquote>
+<p>任何非线程安全的类型、接口都可以利用<code>读写锁+装饰器模式</code>无侵入式地改造为线程安全的类型、接口</p>
+</blockquote>
+<h3 id="Mutex细节"><a href="#Mutex细节" class="headerlink" title="Mutex细节"></a>Mutex细节</h3><p>锁的一般实现都是依赖于：</p>
+<ul>
+<li>自旋作为快路径</li>
+<li>等待队列作为慢路径</li>
+</ul>
+<p>自旋可以通过控制次数或者时间来退出循环</p>
+<p>慢路径：跟语言特性有关，有些依赖于操作系统线程调度，如JAVA。有些是自己管，如goroutine</p>
+<p>以下是锁实现模板</p>
+<pre><code class="golang">type Lock struct &#123;
+    state int
+&#125;
+
+func (l *Lock)Lock()  &#123;
+    i := 0
+
+    // 自旋
+    for locked = CAS(UN_LOCK,LOCKED); !locked &amp;&amp; i &lt; 10 &#123;
+        i++
+    &#125;
+    
+    if locked &#123;
+        return
+    &#125;
+    
+    // 将自己的线程加入阻塞队列,等待唤醒
+    enqueue()
+&#125;
+</code></pre>
+<h3 id="golang-mutex锁核心"><a href="#golang-mutex锁核心" class="headerlink" title="golang mutex锁核心"></a>golang mutex锁核心</h3><p><img src="/2022/09/05/golang/sync/1/1.png" alt="mutex结构"></p>
+<ol>
+<li>state就是用来控制锁状态的核心，所谓加锁，就是把state修改为某个值，解锁也是类似</li>
+<li>sema用来处理沉睡、唤醒的信号量，依赖于两个runtime调用<ul>
+<li>runtime_SemacquireMutex: sema加1并且挂起goroutine</li>
+<li>runtime_Semrelease: sema减1并且唤醒sema上等待的一个goroutine</li>
+</ul>
+</li>
+</ol>
+<h3 id="golang-mutex加锁细节"><a href="#golang-mutex加锁细节" class="headerlink" title="golang mutex加锁细节"></a>golang mutex加锁细节</h3><blockquote>
+<p>一把锁，如果没有人持有它，也没有人抢，那么一次CAS操作就能成功。</p>
+</blockquote>
+<p><img src="/2022/09/05/golang/sync/1/2.png" alt="快路径的CAS自旋操作"></p>
+<p>在上述锁实现模板中，我们说自旋是快路径。</p>
+<p>在golang把它归到了慢路径里面，如图：</p>
+<p><img src="/2022/09/05/golang/sync/1/3.png" alt="慢路径的CAS自旋操作"></p>
+<p>实际上，在这个片段中还是很快的，因为没有进入等待队列的环节</p>
+<blockquote>
+<p>所以：理论上的自旋 &#x3D; Go的快路径 + Go慢路径中的自旋部分</p>
+</blockquote>
+<p>后半部分就是控制锁的两种模式，以及进队列，被唤醒的部分了，如图：</p>
+<p><img src="/2022/09/05/golang/sync/1/4.png" alt="lockSlow的后半部分逻辑"></p>
+<blockquote>
+<p>在1.18之后， 使用 runtime_Semacquire  替换了 runtime_SemacquireMutex ，后者增加了一些对Mutex分析的功能</p>
+</blockquote>
+<h4 id="控制锁的两种模式"><a href="#控制锁的两种模式" class="headerlink" title="控制锁的两种模式"></a>控制锁的两种模式</h4><ul>
+<li>正常模式</li>
+<li>饥饿模式</li>
+</ul>
+<p>如果一个新的goroutine进来争夺锁，而且队列里面也有等待的goroutine，你是设计者，你会把锁给谁？</p>
+<p><img src="/2022/09/05/golang/sync/1/5.png" alt="争夺锁问题"></p>
+<ul>
+<li>给G2：毕竟我们要保证公平，先到先得是规矩，不能破坏</li>
+<li>G1和G2竞争：保证效率，G1肯定已经占着CPU了，所以大概率能拿到锁</li>
+</ul>
+<blockquote>
+<p>所谓的正常模式，就是G1和G2竞争的模式。所以正常模式的核心是避免goroutine调度。</p>
+</blockquote>
+<p>那如果要是每次G2想要拿到锁的时候，都被新来的G1给抢走了，那么G2和其他队列不就是饥饿了吗？</p>
+<p><img src="/2022/09/05/golang/sync/1/6.png" alt="G2抢不过G1，变成饥饿模式"></p>
+<p>G2每次没抢到锁，都要退回去队列头。</p>
+<p>所以如果等待时间超过1ms，那么锁就会变成饥饿模式。</p>
+<blockquote>
+<p>在饥饿模式下，锁会优先选择队列中的goroutine</p>
+</blockquote>
+<p><img src="/2022/09/05/golang/sync/1/7.png" alt="队列只剩1个goroutine"></p>
+<blockquote>
+<p>当队列中只剩下一个goroutine，或者G2的等待时间小于1ms时，将退出饥饿模式</p>
+</blockquote>
+<h4 id="步骤总结"><a href="#步骤总结" class="headerlink" title="步骤总结"></a>步骤总结</h4><p><img src="/2022/09/05/golang/sync/1/8.png" alt="mutex加锁步骤总结"></p>
+<ol>
+<li>先上来一个CAS操作，如果这把锁正空闲，并且没人抢，那么就直接成功</li>
+<li>否则，自旋几次，如果这个时候成功了，也不用加入队列</li>
+<li>否则，加入队列</li>
+<li>从队列中被唤醒：<ul>
+<li>正常模式：和新来的一起抢锁，但是大概率失败</li>
+<li>饥饿模式：肯定拿到锁</li>
+</ul>
+</li>
+</ol>
+<h3 id="golang-mutex解锁细节"><a href="#golang-mutex解锁细节" class="headerlink" title="golang mutex解锁细节"></a>golang mutex解锁细节</h3><p><img src="/2022/09/05/golang/sync/1/9.png" alt="mutex解锁第一步"></p>
+<p>上来就是一个 atomic 操作，解锁。理论上来说这也应该是一个CAS操作，即必须是加锁状态才能解锁，Go这种写法效果是一样的</p>
+<p><img src="/2022/09/05/golang/sync/1/10.png" alt="mutex慢路径"></p>
+<p>如果解锁失败则步入慢路径，也就是要唤醒等待队列里面的goroutine。因为Go的锁有两种模式，所以有两个分支。</p>
+<p><img src="/2022/09/05/golang/sync/1/11.png" alt="mutex解锁"></p>
+<h3 id="Mutex和RWMutex注意事项"><a href="#Mutex和RWMutex注意事项" class="headerlink" title="Mutex和RWMutex注意事项"></a>Mutex和RWMutex注意事项</h3><ul>
+<li><code>RLock</code> <code>RUnlock</code> 适合于读多写少的场景</li>
+<li>写多读少直接加写锁 <code>Lock</code> <code>Unlock</code></li>
+<li>可以考虑使用函数式写法，如延迟初始化</li>
+<li>Mutex和RWMutex都是不可重入的</li>
+<li>尽可能使用defer来解锁，避免panic（panic是直接中断，如果此时拿着锁是没办法释放掉的，但是defer可以确保释放，即使是panic）</li>
+</ul>
+<h3 id="sync包Mutex面试要点"><a href="#sync包Mutex面试要点" class="headerlink" title="sync包Mutex面试要点"></a>sync包Mutex面试要点</h3><ul>
+<li>Mutex的公平性：Go的锁是不公平锁。为什么它不设计为公平锁？</li>
+<li>Mutex的两种模式，以及两种模式的切换时机：<ul>
+<li>正常模式</li>
+<li>饥饿模式</li>
+</ul>
+</li>
+<li>为什么Mutex要设计出来这两种模式？这个问题基本等价于为什么它不设计为公平锁</li>
+<li>如果队列里面有goroutine在等待锁，那么新来的goroutine有可能拿到锁吗？当然，而且大概率</li>
+<li>Mutex是不是不可重入的锁？显然不是</li>
+<li>RWMutex和Mutex有什么区别？如何选择这两个？几乎完全是写操作的选Mutex,其他时候优先选择RWMutex</li>
+<li>Mutex是怎么做到挂起goroutine的，以及如何唤醒goroutine的？在这个语境下，只需要回答sema这个字段以及runtime_SemacquireMutex和runtime_Semrelease两个调用就可以</li>
+</ul>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sync/" rel="tag">sync</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
   <article id="post-golang/context/1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-inner">
     
@@ -954,80 +1203,6 @@ D、地址总线的宽度
 </article>
 
 
-  <article id="post-软件设计师/输入输出系统/3" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/3/">中断向量可提供（）</a>
-    </h1>
-  
-
-
-      </header>
-    
-    <div class="article-meta">
-      
-      <span class="article-date">
-  <i class="fa fa-date"></i>
-  <time class="dt-published" datetime="2022-09-02T07:36:22.000Z" itemprop="datePublished">2022年09月02日</time>
-</span>
-      
-  <div class="article-category">
-    <i class="fa fa-classify"></i>
-    <a class="article-category-link" href="/categories/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/">输入输出系统</a>
-  </div>
-
-      
-      
-<a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/3/#comments" class="article-comment-link">
-  
-  <i class="fa fa-commt"></i>
-  留言
-</a>
-
-
-    </div>
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h4 id="中断向量可提供（）"><a href="#中断向量可提供（）" class="headerlink" title="中断向量可提供（）"></a>中断向量可提供（）</h4><pre><code class="markdown">
-A、IO设备的端口地址
-B、所传送数据的起始地址
-C、中断服务程序的入口地址
-D、主程序的断点地址
-</code></pre>
-<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选C</p>
-<p>计算机在执行程序过程中，当遇到急需处理的事件时，暂停当前正在运行的程序，转去执行有关服务程序，处理完后自动返回原程序，这个过程称为中断。</p>
-<p>中断是一个非常重要的技术。输入输出设备和主机交换数据、分时操作、实时系统、计算机网络和分布式计算机系统中都要用到这种技术。</p>
-<p>为了提高响应中断的速度，通常把所有中断服务程序的入口地址（或称为中断向量）汇集为中断向量表。</p>
-
-        
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-        <div class="article-tag-wrap">
-          
-
-          
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" rel="tag">中断向量</a></li></ul>
-
-          
-
-
-        </div>
-      
-      
-      
-    </footer>
-  </div>
-</article>
-
-
 
     <nav id="page-nav">
 
@@ -1046,6 +1221,10 @@ D、主程序的断点地址
       <ul>
         
           <li>
+            <a href="/2022/09/05/golang/sync/1/">sync包之Mutex和RWMutex</a>
+          </li>
+        
+          <li>
             <a href="/2022/09/03/golang/context/1/">context包底层及面试题</a>
           </li>
         
@@ -1061,10 +1240,6 @@ D、主程序的断点地址
             <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/13/">浮点数对阶</a>
           </li>
         
-          <li>
-            <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/6/">为从内存读取指令操作码，首先要将（）的内容送到地址总线上</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -1075,7 +1250,7 @@ D、主程序的断点地址
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-tag"></i> 标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/BIOS/" style="font-size: 10px;">BIOS</a> <a href="/tags/CISC/" style="font-size: 10px;">CISC</a> <a href="/tags/CPU/" style="font-size: 20px;">CPU</a> <a href="/tags/CRC/" style="font-size: 10px;">CRC</a> <a href="/tags/Cache/" style="font-size: 10px;">Cache</a> <a href="/tags/DMA/" style="font-size: 15px;">DMA</a> <a href="/tags/RISC/" style="font-size: 10px;">RISC</a> <a href="/tags/VLIW/" style="font-size: 10px;">VLIW</a> <a href="/tags/context/" style="font-size: 10px;">context</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" style="font-size: 10px;">中断向量</a> <a href="/tags/%E4%B8%BB%E5%AD%98/" style="font-size: 12.5px;">主存</a> <a href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">地址映射方式</a> <a href="/tags/%E5%AD%97%E9%95%BF/" style="font-size: 10px;">字长</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" style="font-size: 10px;">存储单元</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" style="font-size: 12.5px;">存储器</a> <a href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">寄存器</a> <a href="/tags/%E6%80%BB%E7%BA%BF/" style="font-size: 10px;">总线</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" style="font-size: 10px;">指令周期</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">指令寄存器</a> <a href="/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/" style="font-size: 10px;">浮点数</a> <a href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" style="font-size: 10px;">海明检验码</a> <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" style="font-size: 17.5px;">程序计数器</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" style="font-size: 10px;">系统可靠度</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" style="font-size: 10px;">累加器</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">累加寄存器</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 12.5px;">补码</a> <a href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" style="font-size: 10px;">防火墙</a>
+      <a href="/tags/BIOS/" style="font-size: 10px;">BIOS</a> <a href="/tags/CISC/" style="font-size: 10px;">CISC</a> <a href="/tags/CPU/" style="font-size: 20px;">CPU</a> <a href="/tags/CRC/" style="font-size: 10px;">CRC</a> <a href="/tags/Cache/" style="font-size: 10px;">Cache</a> <a href="/tags/DMA/" style="font-size: 15px;">DMA</a> <a href="/tags/RISC/" style="font-size: 10px;">RISC</a> <a href="/tags/VLIW/" style="font-size: 10px;">VLIW</a> <a href="/tags/context/" style="font-size: 10px;">context</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/sync/" style="font-size: 10px;">sync</a> <a href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" style="font-size: 10px;">中断向量</a> <a href="/tags/%E4%B8%BB%E5%AD%98/" style="font-size: 12.5px;">主存</a> <a href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">地址映射方式</a> <a href="/tags/%E5%AD%97%E9%95%BF/" style="font-size: 10px;">字长</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" style="font-size: 10px;">存储单元</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" style="font-size: 12.5px;">存储器</a> <a href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">寄存器</a> <a href="/tags/%E6%80%BB%E7%BA%BF/" style="font-size: 10px;">总线</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" style="font-size: 10px;">指令周期</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">指令寄存器</a> <a href="/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/" style="font-size: 10px;">浮点数</a> <a href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" style="font-size: 10px;">海明检验码</a> <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" style="font-size: 17.5px;">程序计数器</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" style="font-size: 10px;">系统可靠度</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" style="font-size: 10px;">累加器</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">累加寄存器</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 12.5px;">补码</a> <a href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" style="font-size: 10px;">防火墙</a>
     </div>
   </div>
 
@@ -1084,7 +1259,7 @@ D、主程序的断点地址
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-classify"></i> 分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%92%8C%E7%97%85%E6%AF%92%E9%98%B2%E6%8A%A4/">信息安全和病毒防护</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/">存储系统</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%9F%BA%E7%A1%80/">系统性能评测和可靠性基础</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/">输入输出系统</a><span class="category-list-count">5</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%92%8C%E7%97%85%E6%AF%92%E9%98%B2%E6%8A%A4/">信息安全和病毒防护</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/">存储系统</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%9F%BA%E7%A1%80/">系统性能评测和可靠性基础</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/">输入输出系统</a><span class="category-list-count">5</span></li></ul>
     </div>
   </div>
 
@@ -1094,7 +1269,7 @@ D、主程序的断点地址
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-archive"></i> 归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022年</a><span class="archive-list-count">32</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022年</a><span class="archive-list-count">33</span></li></ul>
     </div>
   </div>
 
@@ -1104,7 +1279,7 @@ D、主程序的断点地址
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-tag"></i> 标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BIOS/" rel="tag">BIOS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CISC/" rel="tag">CISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPU/" rel="tag">CPU</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CRC/" rel="tag">CRC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cache/" rel="tag">Cache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DMA/" rel="tag">DMA</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RISC/" rel="tag">RISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VLIW/" rel="tag">VLIW</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/context/" rel="tag">context</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" rel="tag">中断向量</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E5%AD%98/" rel="tag">主存</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" rel="tag">地址映射方式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%97%E9%95%BF/" rel="tag">字长</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" rel="tag">存储单元</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" rel="tag">存储器</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%BB%E7%BA%BF/" rel="tag">总线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" rel="tag">指令周期</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">指令寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/" rel="tag">浮点数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" rel="tag">海明检验码</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" rel="tag">程序计数器</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" rel="tag">系统可靠度</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" rel="tag">累加器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">累加寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%A1%A5%E7%A0%81/" rel="tag">补码</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" rel="tag">防火墙</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BIOS/" rel="tag">BIOS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CISC/" rel="tag">CISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPU/" rel="tag">CPU</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CRC/" rel="tag">CRC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cache/" rel="tag">Cache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DMA/" rel="tag">DMA</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RISC/" rel="tag">RISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VLIW/" rel="tag">VLIW</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/context/" rel="tag">context</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sync/" rel="tag">sync</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" rel="tag">中断向量</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E5%AD%98/" rel="tag">主存</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" rel="tag">地址映射方式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%97%E9%95%BF/" rel="tag">字长</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" rel="tag">存储单元</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" rel="tag">存储器</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%BB%E7%BA%BF/" rel="tag">总线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" rel="tag">指令周期</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">指令寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/" rel="tag">浮点数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" rel="tag">海明检验码</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" rel="tag">程序计数器</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" rel="tag">系统可靠度</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" rel="tag">累加器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">累加寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%A1%A5%E7%A0%81/" rel="tag">补码</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" rel="tag">防火墙</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
