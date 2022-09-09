@@ -73,6 +73,89 @@
 
       <div class="outer">
         <section id="main">
+  <article id="post-软件设计师/指令系统和计算机体系结构/2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/2/">为实现程序指令的顺序执行，CPU（）中的值将自动加1</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-09-01T05:08:22.000Z" itemprop="datePublished">2022年09月01日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a>
+  </div>
+
+      
+      
+<a href="/2022/09/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/2/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="为实现程序指令的顺序执行，CPU（）中的值将自动加1"><a href="#为实现程序指令的顺序执行，CPU（）中的值将自动加1" class="headerlink" title="为实现程序指令的顺序执行，CPU（）中的值将自动加1"></a>为实现程序指令的顺序执行，CPU（）中的值将自动加1</h4><pre><code class="markdown">
+A、指令寄存器（IR）
+B、程序计数器（PC）
+C、地址寄存器（AR）
+D、指令译码器（ID）
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选B</p>
+<h5 id="CPU执行指令过程"><a href="#CPU执行指令过程" class="headerlink" title="CPU执行指令过程"></a>CPU执行指令过程</h5><ol>
+<li>当执行一条指令时，先把它从内存取到<code>数据寄存器（DR）</code>中，然后再传送至<code> 指令寄存器（IR）</code>。</li>
+<li><code>指令寄存器（IR）</code>保存当前正在执行的指令,然后再传送至<code>指令译码器（ID）</code>。</li>
+<li>为了执行任何给定的指令，<code>指令译码器（ID）</code>对操作码进行译码，并向操作控制器发出具体操作的特定信号。</li>
+<li>在操作期间，<code>地址寄存器（AR）</code>用来保存当前CPU所访问的内存单元的地址。由于在内存和CPU之间存在着操作速度上的差别，所以必须使用地址寄存器来保持地址信息，直到内存的读写操作完成为止。</li>
+<li>为了保证程序指令能够连续地执行下去，<code>程序计数器（PC）</code>来确定下一条指令的地址，所以又称为指令计数器。</li>
+</ol>
+<h5 id="程序计数器工作过程"><a href="#程序计数器工作过程" class="headerlink" title="程序计数器工作过程"></a>程序计数器工作过程</h5><ol>
+<li>在程序开始执行前，必须将它的起始地址，即程序的一条指令所在的内存单元地址送入PC，因此<code>程序计数器（PC）</code>的内容即是从内存提取的第一条指令的地址。</li>
+<li>当执行指令时，CPU将自动修改PC的内容，即每执行一条指令PC增加一个量，这个量等于指令所含的字节数，以便使其保持的总是将要执行的下一条指令的地址。</li>
+<li>由于大多数指令都是按顺序来执行的，所以修改的过程通常只是简单的对PC加1</li>
+</ol>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPU/" rel="tag">CPU</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" rel="tag">程序计数器</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
   <article id="post-软件设计师/指令系统和计算机体系结构/1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-inner">
     
@@ -333,6 +416,10 @@ D、n-1 &lt;= k
       <ul>
         
           <li>
+            <a href="/2022/09/09/golang/sync/2/">sync包之Once</a>
+          </li>
+        
+          <li>
             <a href="/2022/09/05/golang/sync/1/">sync包之Mutex和RWMutex</a>
           </li>
         
@@ -348,10 +435,6 @@ D、n-1 &lt;= k
             <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/4/">BIOS保存在（）</a>
           </li>
         
-          <li>
-            <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/13/">浮点数对阶</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -362,7 +445,7 @@ D、n-1 &lt;= k
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-tag"></i> 标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/BIOS/" style="font-size: 10px;">BIOS</a> <a href="/tags/CISC/" style="font-size: 10px;">CISC</a> <a href="/tags/CPU/" style="font-size: 20px;">CPU</a> <a href="/tags/CRC/" style="font-size: 10px;">CRC</a> <a href="/tags/Cache/" style="font-size: 10px;">Cache</a> <a href="/tags/DMA/" style="font-size: 15px;">DMA</a> <a href="/tags/RISC/" style="font-size: 10px;">RISC</a> <a href="/tags/VLIW/" style="font-size: 10px;">VLIW</a> <a href="/tags/context/" style="font-size: 10px;">context</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/sync/" style="font-size: 10px;">sync</a> <a href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" style="font-size: 10px;">中断向量</a> <a href="/tags/%E4%B8%BB%E5%AD%98/" style="font-size: 12.5px;">主存</a> <a href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">地址映射方式</a> <a href="/tags/%E5%AD%97%E9%95%BF/" style="font-size: 10px;">字长</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" style="font-size: 10px;">存储单元</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" style="font-size: 12.5px;">存储器</a> <a href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">寄存器</a> <a href="/tags/%E6%80%BB%E7%BA%BF/" style="font-size: 10px;">总线</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" style="font-size: 10px;">指令周期</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">指令寄存器</a> <a href="/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/" style="font-size: 10px;">浮点数</a> <a href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" style="font-size: 10px;">海明检验码</a> <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" style="font-size: 17.5px;">程序计数器</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" style="font-size: 10px;">系统可靠度</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" style="font-size: 10px;">累加器</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">累加寄存器</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 12.5px;">补码</a> <a href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" style="font-size: 10px;">防火墙</a>
+      <a href="/tags/BIOS/" style="font-size: 10px;">BIOS</a> <a href="/tags/CISC/" style="font-size: 10px;">CISC</a> <a href="/tags/CPU/" style="font-size: 20px;">CPU</a> <a href="/tags/CRC/" style="font-size: 10px;">CRC</a> <a href="/tags/Cache/" style="font-size: 10px;">Cache</a> <a href="/tags/DMA/" style="font-size: 15px;">DMA</a> <a href="/tags/RISC/" style="font-size: 10px;">RISC</a> <a href="/tags/VLIW/" style="font-size: 10px;">VLIW</a> <a href="/tags/context/" style="font-size: 10px;">context</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/sync/" style="font-size: 12.5px;">sync</a> <a href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" style="font-size: 10px;">中断向量</a> <a href="/tags/%E4%B8%BB%E5%AD%98/" style="font-size: 12.5px;">主存</a> <a href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">地址映射方式</a> <a href="/tags/%E5%AD%97%E9%95%BF/" style="font-size: 10px;">字长</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" style="font-size: 10px;">存储单元</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" style="font-size: 12.5px;">存储器</a> <a href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">寄存器</a> <a href="/tags/%E6%80%BB%E7%BA%BF/" style="font-size: 10px;">总线</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" style="font-size: 10px;">指令周期</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">指令寄存器</a> <a href="/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/" style="font-size: 10px;">浮点数</a> <a href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" style="font-size: 10px;">海明检验码</a> <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" style="font-size: 17.5px;">程序计数器</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" style="font-size: 10px;">系统可靠度</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" style="font-size: 10px;">累加器</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">累加寄存器</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 12.5px;">补码</a> <a href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" style="font-size: 10px;">防火墙</a>
     </div>
   </div>
 
@@ -371,7 +454,7 @@ D、n-1 &lt;= k
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-classify"></i> 分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%92%8C%E7%97%85%E6%AF%92%E9%98%B2%E6%8A%A4/">信息安全和病毒防护</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/">存储系统</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%9F%BA%E7%A1%80/">系统性能评测和可靠性基础</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/">输入输出系统</a><span class="category-list-count">5</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%92%8C%E7%97%85%E6%AF%92%E9%98%B2%E6%8A%A4/">信息安全和病毒防护</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/">存储系统</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%9F%BA%E7%A1%80/">系统性能评测和可靠性基础</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/">输入输出系统</a><span class="category-list-count">5</span></li></ul>
     </div>
   </div>
 
@@ -381,7 +464,7 @@ D、n-1 &lt;= k
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-archive"></i> 归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022年</a><span class="archive-list-count">33</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022年</a><span class="archive-list-count">34</span></li></ul>
     </div>
   </div>
 
@@ -391,7 +474,7 @@ D、n-1 &lt;= k
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-tag"></i> 标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BIOS/" rel="tag">BIOS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CISC/" rel="tag">CISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPU/" rel="tag">CPU</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CRC/" rel="tag">CRC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cache/" rel="tag">Cache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DMA/" rel="tag">DMA</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RISC/" rel="tag">RISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VLIW/" rel="tag">VLIW</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/context/" rel="tag">context</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sync/" rel="tag">sync</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" rel="tag">中断向量</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E5%AD%98/" rel="tag">主存</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" rel="tag">地址映射方式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%97%E9%95%BF/" rel="tag">字长</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" rel="tag">存储单元</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" rel="tag">存储器</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%BB%E7%BA%BF/" rel="tag">总线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" rel="tag">指令周期</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">指令寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/" rel="tag">浮点数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" rel="tag">海明检验码</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" rel="tag">程序计数器</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" rel="tag">系统可靠度</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" rel="tag">累加器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">累加寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%A1%A5%E7%A0%81/" rel="tag">补码</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" rel="tag">防火墙</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BIOS/" rel="tag">BIOS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CISC/" rel="tag">CISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPU/" rel="tag">CPU</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CRC/" rel="tag">CRC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cache/" rel="tag">Cache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DMA/" rel="tag">DMA</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RISC/" rel="tag">RISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VLIW/" rel="tag">VLIW</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/context/" rel="tag">context</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sync/" rel="tag">sync</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" rel="tag">中断向量</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E5%AD%98/" rel="tag">主存</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" rel="tag">地址映射方式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%97%E9%95%BF/" rel="tag">字长</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" rel="tag">存储单元</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" rel="tag">存储器</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%BB%E7%BA%BF/" rel="tag">总线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" rel="tag">指令周期</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">指令寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/" rel="tag">浮点数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" rel="tag">海明检验码</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" rel="tag">程序计数器</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" rel="tag">系统可靠度</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" rel="tag">累加器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">累加寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%A1%A5%E7%A0%81/" rel="tag">补码</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" rel="tag">防火墙</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
