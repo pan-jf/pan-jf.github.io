@@ -73,7 +73,7 @@
 
       <div class="outer">
         <section id="main">
-  <article id="post-golang/sync/3" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <article id="post-软件设计师/软件项目计划/1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-inner">
     
     
@@ -81,7 +81,7 @@
         
   
     <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/09/09/golang/sync/3/">sync包之pool</a>
+      <a class="p-name article-title" href="/2022/10/08/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BD%AF%E4%BB%B6%E9%A1%B9%E7%9B%AE%E8%AE%A1%E5%88%92/1/">gantt图和pert图</a>
     </h1>
   
 
@@ -92,17 +92,17 @@
       
       <span class="article-date">
   <i class="fa fa-date"></i>
-  <time class="dt-published" datetime="2022-09-09T09:58:59.000Z" itemprop="datePublished">2022年09月09日</time>
+  <time class="dt-published" datetime="2022-10-08T15:27:22.000Z" itemprop="datePublished">2022年10月08日</time>
 </span>
       
   <div class="article-category">
     <i class="fa fa-classify"></i>
-    <a class="article-category-link" href="/categories/Golang/">Golang</a>
+    <a class="article-category-link" href="/categories/%E8%BD%AF%E4%BB%B6%E9%A1%B9%E7%9B%AE%E8%AE%A1%E5%88%92/">软件项目计划</a>
   </div>
 
       
       
-<a href="/2022/09/09/golang/sync/3/#comments" class="article-comment-link">
+<a href="/2022/10/08/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BD%AF%E4%BB%B6%E9%A1%B9%E7%9B%AE%E8%AE%A1%E5%88%92/1/#comments" class="article-comment-link">
   
   <i class="fa fa-commt"></i>
   留言
@@ -112,18 +112,27 @@
     </div>
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="Pool"><a href="#Pool" class="headerlink" title="Pool"></a>Pool</h2><p>一般情况下，如果要考虑缓存资源，比如说创建好的对象，那么可以使用sync.pool</p>
-<ul>
-<li>sync.pool会先查看自己是否有资源，有则直接返回</li>
-<li>没有则创建一个新的</li>
-<li>sync.pool会在GC的时候释放缓存的资源</li>
-</ul>
-<p>一般用sync.pool都是为了复用内存：</p>
-<ul>
-<li>减少了内存分配，也减轻了GC压力（最主要）</li>
-<li>少消耗CPU资源（内存分配和GC都是CPU密集操作）</li>
-</ul>
-<h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3>
+        <h4 id="进度安排的常用图形描述方法有gantt图和pert图，gantt图不能清晰地描述（）；pert图可以给出那些任务完成后才能开始另一些任务，下图所示的pert图中，时间6的最晚开始时刻是（）"><a href="#进度安排的常用图形描述方法有gantt图和pert图，gantt图不能清晰地描述（）；pert图可以给出那些任务完成后才能开始另一些任务，下图所示的pert图中，时间6的最晚开始时刻是（）" class="headerlink" title="进度安排的常用图形描述方法有gantt图和pert图，gantt图不能清晰地描述（）；pert图可以给出那些任务完成后才能开始另一些任务，下图所示的pert图中，时间6的最晚开始时刻是（）"></a>进度安排的常用图形描述方法有gantt图和pert图，gantt图不能清晰地描述（）；pert图可以给出那些任务完成后才能开始另一些任务，下图所示的pert图中，时间6的最晚开始时刻是（）</h4><p><img src="/2022/10/08/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BD%AF%E4%BB%B6%E9%A1%B9%E7%9B%AE%E8%AE%A1%E5%88%92/1/1.jpeg" alt="部件分布图"></p>
+<pre><code class="markdown">
+问题1
+A、每个任务从何时开始
+B、每个任务到何时结束
+C、每个任务的进展情况
+D、各任务之间的依赖关系
+
+
+问题2
+A、0
+B、3
+C、10
+D、11
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>DC</p>
+<p>gantt图用水平条状图描述，它以日历为基准描述项目任务，可以清楚的表示任务的持续时间和任务之间的并行，但是不能清晰的描述各个任务之间的依赖关系。</p>
+<p>pert图是一种网络模型，描述一个项目任务之间的关系，可以明确表达任务之间的依赖关系，即哪些任务后才能开始另一些任务，以及如期完成整个工程的关键路径。</p>
+<p>图中任务流1-&gt;2-&gt;5-&gt;7-&gt;9的持续时间是15<br>1-&gt;2-&gt;5-&gt;8-&gt;9的持续时间是13<br>1-&gt;3-&gt;6-&gt;8-&gt;9的持续时间是8<br>4-&gt;6-&gt;8-&gt;9的持续时间是9</p>
+<p>所以项目的关键路径长度是15.时间6在非关键路径上 ，其后的任务需要时间为5，所以最晚开始时间为15-5&#x3D;10</p>
+
         
         
       
@@ -134,7 +143,322 @@
           
 
           
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sync/" rel="tag">sync</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pert%E5%9B%BE/" rel="tag">pert图</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/软件测试/1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/10/08/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/1/">白盒测试</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-10-08T15:22:22.000Z" itemprop="datePublished">2022年10月08日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/">软件测试</a>
+  </div>
+
+      
+      
+<a href="/2022/10/08/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/1/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="使用白盒测试方法时，应根据（）和制定的覆盖标准确定测试数据"><a href="#使用白盒测试方法时，应根据（）和制定的覆盖标准确定测试数据" class="headerlink" title="使用白盒测试方法时，应根据（）和制定的覆盖标准确定测试数据"></a>使用白盒测试方法时，应根据（）和制定的覆盖标准确定测试数据</h4><pre><code class="markdown">
+A、程序的内部逻辑
+B、程序结构的复杂性
+C、使用说明书
+D、程序的功能
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>A</p>
+<p>白盒测试又称为结构测试，根据程序的内部结构和逻辑来设计测试用例，对程序的执行路径和过程进行测试，检查是否满足设计的需要。白盒测试常用的技术设计不同覆盖标准，在测试时需要根据制定的覆盖标准确定测试数据</p>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/" rel="tag">软件测试</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/软件开发基础知识/1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/10/08/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1/">基于构件的软件开发</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-10-08T15:16:22.000Z" itemprop="datePublished">2022年10月08日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">软件开发基础知识</a>
+  </div>
+
+      
+      
+<a href="/2022/10/08/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="基于构件的软件开发，强调使用可复用的软件“构件”来设计和构件软件系统，对所需的构件进行合格性检验、（）、并将它们集成到新系统中"><a href="#基于构件的软件开发，强调使用可复用的软件“构件”来设计和构件软件系统，对所需的构件进行合格性检验、（）、并将它们集成到新系统中" class="headerlink" title="基于构件的软件开发，强调使用可复用的软件“构件”来设计和构件软件系统，对所需的构件进行合格性检验、（）、并将它们集成到新系统中"></a>基于构件的软件开发，强调使用可复用的软件“构件”来设计和构件软件系统，对所需的构件进行合格性检验、（）、并将它们集成到新系统中</h4><pre><code class="markdown">
+A、规模度量
+B、数据验证
+C、适应性修改
+D、正确性测试
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>C</p>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/" rel="tag">软件开发</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/多媒体基础知识/1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/10/08/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E5%A4%9A%E5%AA%92%E4%BD%93%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1/">MPEG标准的应用</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-10-08T15:05:22.000Z" itemprop="datePublished">2022年10月08日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E5%A4%9A%E5%AA%92%E4%BD%93%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">多媒体基础知识</a>
+  </div>
+
+      
+      
+<a href="/2022/10/08/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E5%A4%9A%E5%AA%92%E4%BD%93%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="在ISO制定并发布的MPEG系列标准中，（）的音视频压缩编码技术被应用到VCD中，（）标准中的音视频压缩编码技术被应用到DVD中，（）标准中不包含音视频压缩编码技术"><a href="#在ISO制定并发布的MPEG系列标准中，（）的音视频压缩编码技术被应用到VCD中，（）标准中的音视频压缩编码技术被应用到DVD中，（）标准中不包含音视频压缩编码技术" class="headerlink" title="在ISO制定并发布的MPEG系列标准中，（）的音视频压缩编码技术被应用到VCD中，（）标准中的音视频压缩编码技术被应用到DVD中，（）标准中不包含音视频压缩编码技术"></a>在ISO制定并发布的MPEG系列标准中，（）的音视频压缩编码技术被应用到VCD中，（）标准中的音视频压缩编码技术被应用到DVD中，（）标准中不包含音视频压缩编码技术</h4><pre><code class="markdown">
+问题1
+A、MPEG-1
+B、MPEG-2
+C、MPEG-7
+D、MPEG-21
+
+
+问题2
+A、MPEG-1
+B、MPEG-2
+C、MPEG-4
+D、MPEG-21
+
+问题3
+A、MPEG-1
+B、MPEG-2
+C、MPEG-4
+D、MPEG-7
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>ABD</p>
+<p>目前已制定和制定中的标准包括 MPEG-1、MPEG-2、MPEG-4、MPEG-7和MPEG-21.</p>
+<p>其中 MPEG-1（VCD）、MPEG-2(DVD)、MPEG-4(数字电视) 是针对音视频编码技术</p>
+<p>MPEG-7是多媒体内容描述接口标准</p>
+<p>MPEG-21是多媒体应用框架标准</p>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MPEG/" rel="tag">MPEG</a></li></ul>
+
+          
+
+
+        </div>
+      
+      
+      
+    </footer>
+  </div>
+</article>
+
+
+  <article id="post-软件设计师/信息安全和病毒防护/2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/10/08/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%92%8C%E7%97%85%E6%AF%92%E9%98%B2%E6%8A%A4/2/">病毒类型以及感染目标</a>
+    </h1>
+  
+
+
+      </header>
+    
+    <div class="article-meta">
+      
+      <span class="article-date">
+  <i class="fa fa-date"></i>
+  <time class="dt-published" datetime="2022-10-08T14:55:22.000Z" itemprop="datePublished">2022年10月08日</time>
+</span>
+      
+  <div class="article-category">
+    <i class="fa fa-classify"></i>
+    <a class="article-category-link" href="/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%92%8C%E7%97%85%E6%AF%92%E9%98%B2%E6%8A%A4/">信息安全和病毒防护</a>
+  </div>
+
+      
+      
+<a href="/2022/10/08/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%92%8C%E7%97%85%E6%AF%92%E9%98%B2%E6%8A%A4/2/#comments" class="article-comment-link">
+  
+  <i class="fa fa-commt"></i>
+  留言
+</a>
+
+
+    </div>
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="杀毒软件报告发现病毒Macro-Melissa-由该病毒名称可以判断病毒类型是（），这类病毒主要感染目标是（）"><a href="#杀毒软件报告发现病毒Macro-Melissa-由该病毒名称可以判断病毒类型是（），这类病毒主要感染目标是（）" class="headerlink" title="杀毒软件报告发现病毒Macro.Melissa,由该病毒名称可以判断病毒类型是（），这类病毒主要感染目标是（）"></a>杀毒软件报告发现病毒Macro.Melissa,由该病毒名称可以判断病毒类型是（），这类病毒主要感染目标是（）</h4><pre><code class="markdown">
+问题1：
+A、文件型
+B、引导型
+C、目录型
+D、宏病毒
+
+
+
+问题2：
+A、exe或com可执行文件
+B、word或Excel文件
+C、dll系统文件
+D、磁盘引导区
+
+</code></pre>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>DB</p>
+<p>常见木马病毒前缀是Trolan<br>蠕虫病毒前缀是Worm<br>宏病毒前缀是Macro   </p>
+<p>文件型病毒感染可执行文件（exe和com文件）<br>引导型病毒影响软盘或磁盘的引导扇区<br>目录型病毒能修改硬盘上存储的所有文件的地址<br>宏病毒感染word，Excel等文件</p>
+
+        
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div class="article-tag-wrap">
+          
+
+          
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%97%85%E6%AF%92/" rel="tag">病毒</a></li></ul>
 
           
 
@@ -395,7 +719,7 @@ func (l *Lock)Lock()  &#123;
     enqueue()
 &#125;
 </code></pre>
-<h3 id="golang-mutex锁核心"><a href="#golang-mutex锁核心" class="headerlink" title="golang mutex锁核心"></a>golang mutex锁核心</h3><p><img src="/2022/09/05/golang/sync/1/1.jpg" alt="mutex结构"></p>
+<h3 id="golang-mutex锁核心"><a href="#golang-mutex锁核心" class="headerlink" title="golang mutex锁核心"></a>golang mutex锁核心</h3><p><img src="/2022/09/05/golang/sync/1/1.png" alt="mutex结构"></p>
 <ol>
 <li>state就是用来控制锁状态的核心，所谓加锁，就是把state修改为某个值，解锁也是类似</li>
 <li>sema用来处理沉睡、唤醒的信号量，依赖于两个runtime调用<ul>
@@ -407,16 +731,16 @@ func (l *Lock)Lock()  &#123;
 <h3 id="golang-mutex加锁细节"><a href="#golang-mutex加锁细节" class="headerlink" title="golang mutex加锁细节"></a>golang mutex加锁细节</h3><blockquote>
 <p>一把锁，如果没有人持有它，也没有人抢，那么一次CAS操作就能成功。</p>
 </blockquote>
-<p><img src="/2022/09/05/golang/sync/1/2.jpg" alt="快路径的CAS自旋操作"></p>
+<p><img src="/2022/09/05/golang/sync/1/2.png" alt="快路径的CAS自旋操作"></p>
 <p>在上述锁实现模板中，我们说自旋是快路径。</p>
 <p>在golang把它归到了慢路径里面，如图：</p>
-<p><img src="/2022/09/05/golang/sync/1/3.jpg" alt="慢路径的CAS自旋操作"></p>
+<p><img src="/2022/09/05/golang/sync/1/3.png" alt="慢路径的CAS自旋操作"></p>
 <p>实际上，在这个片段中还是很快的，因为没有进入等待队列的环节</p>
 <blockquote>
 <p>所以：理论上的自旋 &#x3D; Go的快路径 + Go慢路径中的自旋部分</p>
 </blockquote>
 <p>后半部分就是控制锁的两种模式，以及进队列，被唤醒的部分了，如图：</p>
-<p><img src="/2022/09/05/golang/sync/1/4.jpg" alt="lockSlow的后半部分逻辑"></p>
+<p><img src="/2022/09/05/golang/sync/1/4.png" alt="lockSlow的后半部分逻辑"></p>
 <blockquote>
 <p>在1.18之后， 使用 runtime_Semacquire  替换了 runtime_SemacquireMutex ，后者增加了一些对Mutex分析的功能</p>
 </blockquote>
@@ -425,7 +749,7 @@ func (l *Lock)Lock()  &#123;
 <li>饥饿模式</li>
 </ul>
 <p>如果一个新的goroutine进来争夺锁，而且队列里面也有等待的goroutine，你是设计者，你会把锁给谁？</p>
-<p><img src="/2022/09/05/golang/sync/1/5.jpg" alt="争夺锁问题"></p>
+<p><img src="/2022/09/05/golang/sync/1/5.png" alt="争夺锁问题"></p>
 <ul>
 <li>给G2：毕竟我们要保证公平，先到先得是规矩，不能破坏</li>
 <li>G1和G2竞争：保证效率，G1肯定已经占着CPU了，所以大概率能拿到锁</li>
@@ -434,17 +758,17 @@ func (l *Lock)Lock()  &#123;
 <p>所谓的正常模式，就是G1和G2竞争的模式。所以正常模式的核心是避免goroutine调度。</p>
 </blockquote>
 <p>那如果要是每次G2想要拿到锁的时候，都被新来的G1给抢走了，那么G2和其他队列不就是饥饿了吗？</p>
-<p><img src="/2022/09/05/golang/sync/1/6.jpg" alt="G2抢不过G1，变成饥饿模式"></p>
+<p><img src="/2022/09/05/golang/sync/1/6.png" alt="G2抢不过G1，变成饥饿模式"></p>
 <p>G2每次没抢到锁，都要退回去队列头。</p>
 <p>所以如果等待时间超过1ms，那么锁就会变成饥饿模式。</p>
 <blockquote>
 <p>在饥饿模式下，锁会优先选择队列中的goroutine</p>
 </blockquote>
-<p><img src="/2022/09/05/golang/sync/1/7.jpg" alt="队列只剩1个goroutine"></p>
+<p><img src="/2022/09/05/golang/sync/1/7.png" alt="队列只剩1个goroutine"></p>
 <blockquote>
 <p>当队列中只剩下一个goroutine，或者G2的等待时间小于1ms时，将退出饥饿模式</p>
 </blockquote>
-<h4 id="步骤总结"><a href="#步骤总结" class="headerlink" title="步骤总结"></a>步骤总结</h4><p><img src="/2022/09/05/golang/sync/1/8.jpg" alt="mutex加锁步骤总结"></p>
+<h4 id="步骤总结"><a href="#步骤总结" class="headerlink" title="步骤总结"></a>步骤总结</h4><p><img src="/2022/09/05/golang/sync/1/8.png" alt="mutex加锁步骤总结"></p>
 <ol>
 <li>先上来一个CAS操作，如果这把锁正空闲，并且没人抢，那么就直接成功</li>
 <li>否则，自旋几次，如果这个时候成功了，也不用加入队列</li>
@@ -455,11 +779,11 @@ func (l *Lock)Lock()  &#123;
 </ul>
 </li>
 </ol>
-<h3 id="golang-mutex解锁细节"><a href="#golang-mutex解锁细节" class="headerlink" title="golang mutex解锁细节"></a>golang mutex解锁细节</h3><p><img src="/2022/09/05/golang/sync/1/9.jpg" alt="mutex解锁第一步"></p>
+<h3 id="golang-mutex解锁细节"><a href="#golang-mutex解锁细节" class="headerlink" title="golang mutex解锁细节"></a>golang mutex解锁细节</h3><p><img src="/2022/09/05/golang/sync/1/9.png" alt="mutex解锁第一步"></p>
 <p>上来就是一个 atomic 操作，解锁。理论上来说这也应该是一个CAS操作，即必须是加锁状态才能解锁，Go这种写法效果是一样的</p>
-<p><img src="/2022/09/05/golang/sync/1/10.jpg" alt="mutex慢路径"></p>
+<p><img src="/2022/09/05/golang/sync/1/10.png" alt="mutex慢路径"></p>
 <p>如果解锁失败则步入慢路径，也就是要唤醒等待队列里面的goroutine。因为Go的锁有两种模式，所以有两个分支。</p>
-<p><img src="/2022/09/05/golang/sync/1/11.jpg" alt="mutex解锁"></p>
+<p><img src="/2022/09/05/golang/sync/1/11.png" alt="mutex解锁"></p>
 <h3 id="Mutex和RWMutex注意事项"><a href="#Mutex和RWMutex注意事项" class="headerlink" title="Mutex和RWMutex注意事项"></a>Mutex和RWMutex注意事项</h3><ul>
 <li><code>RLock</code> <code>RUnlock</code> 适合于读多写少的场景</li>
 <li>写多读少直接加写锁 <code>Lock</code> <code>Unlock</code></li>
@@ -942,306 +1266,6 @@ D、虚拟存储器
 </article>
 
 
-  <article id="post-软件设计师/计算机基本工作原理/13" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/13/">浮点数对阶</a>
-    </h1>
-  
-
-
-      </header>
-    
-    <div class="article-meta">
-      
-      <span class="article-date">
-  <i class="fa fa-date"></i>
-  <time class="dt-published" datetime="2022-09-02T09:23:20.000Z" itemprop="datePublished">2022年09月02日</time>
-</span>
-      
-  <div class="article-category">
-    <i class="fa fa-classify"></i>
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a>
-  </div>
-
-      
-      
-<a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/13/#comments" class="article-comment-link">
-  
-  <i class="fa fa-commt"></i>
-  留言
-</a>
-
-
-    </div>
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h4 id="浮点数的表示分为阶和尾数两部分。两个浮点数相加时，需要先对阶，即（）（n为阶差绝对值）"><a href="#浮点数的表示分为阶和尾数两部分。两个浮点数相加时，需要先对阶，即（）（n为阶差绝对值）" class="headerlink" title="浮点数的表示分为阶和尾数两部分。两个浮点数相加时，需要先对阶，即（）（n为阶差绝对值）"></a>浮点数的表示分为阶和尾数两部分。两个浮点数相加时，需要先对阶，即（）（n为阶差绝对值）</h4><pre><code class="markdown">
-A、将大阶向小阶对齐，同时将尾数左移n位
-B、将大阶向小阶对齐，同时将尾数右移n位
-C、将小阶向大阶对齐，同时将尾数左移n位
-D、将小阶向大阶对齐，同时将尾数右移n位
-</code></pre>
-<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选D</p>
-<p>对阶时，小数向大数看齐；对阶是通过较小数的尾数右移实现的。</p>
-<h5 id="例如"><a href="#例如" class="headerlink" title="例如"></a>例如</h5><p>1000.2 + 119.3</p>
-<p>1000是 <code>1.0002X(10^3)</code> ，其中<code>1.0002</code>是尾数，3是指数，10是基数<br>119是 <code>1.193X(10^2)</code>，其中<code>1.193</code>是尾数，2是指数，10是基数</p>
-<p>对阶需要先将 <code>1.193X(10^2)</code> 要转成 <code>0.1193X(10^3)</code>，然后再计算 <code>1.0002 + 0.1193</code>,得出1.1195 X (10^3)</p>
-
-        
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-        <div class="article-tag-wrap">
-          
-
-          
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/" rel="tag">浮点数</a></li></ul>
-
-          
-
-
-        </div>
-      
-      
-      
-    </footer>
-  </div>
-</article>
-
-
-  <article id="post-软件设计师/指令系统和计算机体系结构/6" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/6/">为从内存读取指令操作码，首先要将（）的内容送到地址总线上</a>
-    </h1>
-  
-
-
-      </header>
-    
-    <div class="article-meta">
-      
-      <span class="article-date">
-  <i class="fa fa-date"></i>
-  <time class="dt-published" datetime="2022-09-02T09:02:22.000Z" itemprop="datePublished">2022年09月02日</time>
-</span>
-      
-  <div class="article-category">
-    <i class="fa fa-classify"></i>
-    <a class="article-category-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a>
-  </div>
-
-      
-      
-<a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/6/#comments" class="article-comment-link">
-  
-  <i class="fa fa-commt"></i>
-  留言
-</a>
-
-
-    </div>
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h4 id="计算机在一个指令周期的过程中，为从内存读取指令操作码，首先要将（）的内容送到地址总线上"><a href="#计算机在一个指令周期的过程中，为从内存读取指令操作码，首先要将（）的内容送到地址总线上" class="headerlink" title="计算机在一个指令周期的过程中，为从内存读取指令操作码，首先要将（）的内容送到地址总线上"></a>计算机在一个指令周期的过程中，为从内存读取指令操作码，首先要将（）的内容送到地址总线上</h4><pre><code class="markdown">
-A、指令寄存器（IR）
-B、通用寄存器（GR）
-C、程序计数器（PC）
-D、状态寄存器（PSW）
-</code></pre>
-<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选C</p>
-<p>CPU<code>首先</code>从程序计数器（PC）获得需要执行的指令地址，</p>
-<p>从内存（或高速缓存）读取到的指令则暂存在指令寄存器（IR），然后进行分析和执行</p>
-
-        
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-        <div class="article-tag-wrap">
-          
-
-          
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" rel="tag">程序计数器</a></li></ul>
-
-          
-
-
-        </div>
-      
-      
-      
-    </footer>
-  </div>
-</article>
-
-
-  <article id="post-软件设计师/存储系统/4" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/4/">主存与cache的地址映射方式</a>
-    </h1>
-  
-
-
-      </header>
-    
-    <div class="article-meta">
-      
-      <span class="article-date">
-  <i class="fa fa-date"></i>
-  <time class="dt-published" datetime="2022-09-02T08:05:22.000Z" itemprop="datePublished">2022年09月02日</time>
-</span>
-      
-  <div class="article-category">
-    <i class="fa fa-classify"></i>
-    <a class="article-category-link" href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/">存储系统</a>
-  </div>
-
-      
-      
-<a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/4/#comments" class="article-comment-link">
-  
-  <i class="fa fa-commt"></i>
-  留言
-</a>
-
-
-    </div>
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h4 id="主存与cache的地址映射方式中，（）方式可以实现主存任意一块装入cache中任意位置，只有装满才需要替换"><a href="#主存与cache的地址映射方式中，（）方式可以实现主存任意一块装入cache中任意位置，只有装满才需要替换" class="headerlink" title="主存与cache的地址映射方式中，（）方式可以实现主存任意一块装入cache中任意位置，只有装满才需要替换"></a>主存与cache的地址映射方式中，（）方式可以实现主存任意一块装入cache中任意位置，只有装满才需要替换</h4><pre><code class="markdown">
-A、全相连
-B、直接映射
-C、组相连
-D、串并联
-</code></pre>
-<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选A</p>
-<p>全相连地址映射：主存的任意一块可以映射到cache中的任意一块</p>
-<p>直接相连映射：主存中的一块只能映射到cache一个特定的块中</p>
-<p>组相连的映射：各区的某一块只能存入缓存的同租号的空间内，但组内各块地址之间则可以任意存放</p>
-<p>一般来说，主存到cache之间采用直接相连映射；两个对应的组内部采用全相连映射方式</p>
-<p>但本题问的是，哪种方式可以实现<code>主存任意一块装入cache中任意位置</code>,所以应该是全相连</p>
-
-        
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-        <div class="article-tag-wrap">
-          
-
-          
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" rel="tag">地址映射方式</a></li></ul>
-
-          
-
-
-        </div>
-      
-      
-      
-    </footer>
-  </div>
-</article>
-
-
-  <article id="post-软件设计师/计算机基本工作原理/12" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/12/">CPU对其访问速度最快的是（）</a>
-    </h1>
-  
-
-
-      </header>
-    
-    <div class="article-meta">
-      
-      <span class="article-date">
-  <i class="fa fa-date"></i>
-  <time class="dt-published" datetime="2022-09-02T07:56:22.000Z" itemprop="datePublished">2022年09月02日</time>
-</span>
-      
-  <div class="article-category">
-    <i class="fa fa-classify"></i>
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a>
-  </div>
-
-      
-      
-<a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/12/#comments" class="article-comment-link">
-  
-  <i class="fa fa-commt"></i>
-  留言
-</a>
-
-
-    </div>
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h4 id="计算机中CPU对其访问速度最快的是（）"><a href="#计算机中CPU对其访问速度最快的是（）" class="headerlink" title="计算机中CPU对其访问速度最快的是（）"></a>计算机中CPU对其访问速度最快的是（）</h4><pre><code class="markdown">
-A、内存
-B、Cache
-C、通用寄存器
-D、硬盘
-</code></pre>
-<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>选C</p>
-<p>计算机系统中的CPU内部对通用寄存器的存储速度是最快的。</p>
-<p>其次是cache</p>
-<p>内存的存取速度再次</p>
-<p>硬盘作为外存是速度最慢的</p>
-<p>它们共同组成分级存储体系来解决存储容量、成本和速度之间的矛盾。</p>
-
-        
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-        <div class="article-tag-wrap">
-          
-
-          
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPU/" rel="tag">CPU</a></li></ul>
-
-          
-
-
-        </div>
-      
-      
-      
-    </footer>
-  </div>
-</article>
-
-
 
     <nav id="page-nav">
 
@@ -1260,23 +1284,23 @@ D、硬盘
       <ul>
         
           <li>
-            <a href="/2022/09/09/golang/sync/3/">sync包之pool</a>
+            <a href="/2022/10/08/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BD%AF%E4%BB%B6%E9%A1%B9%E7%9B%AE%E8%AE%A1%E5%88%92/1/">gantt图和pert图</a>
           </li>
         
           <li>
-            <a href="/2022/09/09/golang/sync/2/">sync包之Once</a>
+            <a href="/2022/10/08/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/1/">白盒测试</a>
           </li>
         
           <li>
-            <a href="/2022/09/05/golang/sync/1/">sync包之Mutex和RWMutex</a>
+            <a href="/2022/10/08/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1/">基于构件的软件开发</a>
           </li>
         
           <li>
-            <a href="/2022/09/03/golang/context/1/">context包底层及面试题</a>
+            <a href="/2022/10/08/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E5%A4%9A%E5%AA%92%E4%BD%93%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1/">MPEG标准的应用</a>
           </li>
         
           <li>
-            <a href="/2022/09/02/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/5/">CPU是在（）结束时响应DMA请求的</a>
+            <a href="/2022/10/08/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%92%8C%E7%97%85%E6%AF%92%E9%98%B2%E6%8A%A4/2/">病毒类型以及感染目标</a>
           </li>
         
       </ul>
@@ -1289,7 +1313,7 @@ D、硬盘
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-tag"></i> 标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/BIOS/" style="font-size: 10px;">BIOS</a> <a href="/tags/CISC/" style="font-size: 10px;">CISC</a> <a href="/tags/CPU/" style="font-size: 20px;">CPU</a> <a href="/tags/CRC/" style="font-size: 10px;">CRC</a> <a href="/tags/Cache/" style="font-size: 10px;">Cache</a> <a href="/tags/DMA/" style="font-size: 15px;">DMA</a> <a href="/tags/RISC/" style="font-size: 10px;">RISC</a> <a href="/tags/VLIW/" style="font-size: 10px;">VLIW</a> <a href="/tags/context/" style="font-size: 10px;">context</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/sync/" style="font-size: 15px;">sync</a> <a href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" style="font-size: 10px;">中断向量</a> <a href="/tags/%E4%B8%BB%E5%AD%98/" style="font-size: 12.5px;">主存</a> <a href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">地址映射方式</a> <a href="/tags/%E5%AD%97%E9%95%BF/" style="font-size: 10px;">字长</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" style="font-size: 10px;">存储单元</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" style="font-size: 12.5px;">存储器</a> <a href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">寄存器</a> <a href="/tags/%E6%80%BB%E7%BA%BF/" style="font-size: 10px;">总线</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" style="font-size: 10px;">指令周期</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">指令寄存器</a> <a href="/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/" style="font-size: 10px;">浮点数</a> <a href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" style="font-size: 10px;">海明检验码</a> <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" style="font-size: 17.5px;">程序计数器</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" style="font-size: 10px;">系统可靠度</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" style="font-size: 10px;">累加器</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">累加寄存器</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 12.5px;">补码</a> <a href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" style="font-size: 10px;">防火墙</a>
+      <a href="/tags/BIOS/" style="font-size: 10px;">BIOS</a> <a href="/tags/CISC/" style="font-size: 10px;">CISC</a> <a href="/tags/CPU/" style="font-size: 20px;">CPU</a> <a href="/tags/CRC/" style="font-size: 10px;">CRC</a> <a href="/tags/Cache/" style="font-size: 10px;">Cache</a> <a href="/tags/DMA/" style="font-size: 15px;">DMA</a> <a href="/tags/MPEG/" style="font-size: 10px;">MPEG</a> <a href="/tags/RISC/" style="font-size: 10px;">RISC</a> <a href="/tags/VLIW/" style="font-size: 10px;">VLIW</a> <a href="/tags/context/" style="font-size: 10px;">context</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/pert%E5%9B%BE/" style="font-size: 10px;">pert图</a> <a href="/tags/sync/" style="font-size: 12.5px;">sync</a> <a href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" style="font-size: 10px;">中断向量</a> <a href="/tags/%E4%B8%BB%E5%AD%98/" style="font-size: 12.5px;">主存</a> <a href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">地址映射方式</a> <a href="/tags/%E5%AD%97%E9%95%BF/" style="font-size: 10px;">字长</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" style="font-size: 10px;">存储单元</a> <a href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" style="font-size: 12.5px;">存储器</a> <a href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">寄存器</a> <a href="/tags/%E6%80%BB%E7%BA%BF/" style="font-size: 10px;">总线</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" style="font-size: 10px;">指令周期</a> <a href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">指令寄存器</a> <a href="/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/" style="font-size: 10px;">浮点数</a> <a href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" style="font-size: 10px;">海明检验码</a> <a href="/tags/%E7%97%85%E6%AF%92/" style="font-size: 10px;">病毒</a> <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" style="font-size: 17.5px;">程序计数器</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" style="font-size: 10px;">系统可靠度</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" style="font-size: 10px;">累加器</a> <a href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" style="font-size: 10px;">累加寄存器</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 12.5px;">补码</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/" style="font-size: 10px;">软件开发</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/" style="font-size: 10px;">软件测试</a> <a href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" style="font-size: 10px;">防火墙</a>
     </div>
   </div>
 
@@ -1298,7 +1322,7 @@ D、硬盘
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-classify"></i> 分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%92%8C%E7%97%85%E6%AF%92%E9%98%B2%E6%8A%A4/">信息安全和病毒防护</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/">存储系统</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%9F%BA%E7%A1%80/">系统性能评测和可靠性基础</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/">输入输出系统</a><span class="category-list-count">5</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Golang/">Golang</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%92%8C%E7%97%85%E6%AF%92%E9%98%B2%E6%8A%A4/">信息安全和病毒防护</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%9A%E5%AA%92%E4%BD%93%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">多媒体基础知识</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/">存储系统</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">指令系统和计算机体系结构</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E8%AF%84%E6%B5%8B%E5%92%8C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%9F%BA%E7%A1%80/">系统性能评测和可靠性基础</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">计算机基本工作原理</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">软件开发基础知识</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/">软件测试</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BD%AF%E4%BB%B6%E9%A1%B9%E7%9B%AE%E8%AE%A1%E5%88%92/">软件项目计划</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%B3%BB%E7%BB%9F/">输入输出系统</a><span class="category-list-count">5</span></li></ul>
     </div>
   </div>
 
@@ -1308,7 +1332,7 @@ D、硬盘
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-archive"></i> 归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022年</a><span class="archive-list-count">35</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022年</a><span class="archive-list-count">39</span></li></ul>
     </div>
   </div>
 
@@ -1318,7 +1342,7 @@ D、硬盘
   <div class="widget-wrap">
     <h3 class="widget-title"><i class="fa fa-tag"></i> 标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BIOS/" rel="tag">BIOS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CISC/" rel="tag">CISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPU/" rel="tag">CPU</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CRC/" rel="tag">CRC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cache/" rel="tag">Cache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DMA/" rel="tag">DMA</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RISC/" rel="tag">RISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VLIW/" rel="tag">VLIW</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/context/" rel="tag">context</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sync/" rel="tag">sync</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" rel="tag">中断向量</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E5%AD%98/" rel="tag">主存</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" rel="tag">地址映射方式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%97%E9%95%BF/" rel="tag">字长</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" rel="tag">存储单元</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" rel="tag">存储器</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%BB%E7%BA%BF/" rel="tag">总线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" rel="tag">指令周期</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">指令寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/" rel="tag">浮点数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" rel="tag">海明检验码</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" rel="tag">程序计数器</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" rel="tag">系统可靠度</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" rel="tag">累加器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">累加寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%A1%A5%E7%A0%81/" rel="tag">补码</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" rel="tag">防火墙</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BIOS/" rel="tag">BIOS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CISC/" rel="tag">CISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPU/" rel="tag">CPU</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CRC/" rel="tag">CRC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cache/" rel="tag">Cache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DMA/" rel="tag">DMA</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MPEG/" rel="tag">MPEG</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RISC/" rel="tag">RISC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VLIW/" rel="tag">VLIW</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/context/" rel="tag">context</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pert%E5%9B%BE/" rel="tag">pert图</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sync/" rel="tag">sync</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F/" rel="tag">中断向量</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%BB%E5%AD%98/" rel="tag">主存</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%B0%E5%9D%80%E6%98%A0%E5%B0%84%E6%96%B9%E5%BC%8F/" rel="tag">地址映射方式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%97%E9%95%BF/" rel="tag">字长</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83/" rel="tag">存储单元</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%98%E5%82%A8%E5%99%A8/" rel="tag">存储器</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%BB%E7%BA%BF/" rel="tag">总线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F/" rel="tag">指令周期</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E4%BB%A4%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">指令寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/" rel="tag">浮点数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%B7%E6%98%8E%E6%A3%80%E9%AA%8C%E7%A0%81/" rel="tag">海明检验码</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%97%85%E6%AF%92/" rel="tag">病毒</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" rel="tag">程序计数器</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E5%8F%AF%E9%9D%A0%E5%BA%A6/" rel="tag">系统可靠度</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%99%A8/" rel="tag">累加器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%AF%E5%8A%A0%E5%AF%84%E5%AD%98%E5%99%A8/" rel="tag">累加寄存器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%A1%A5%E7%A0%81/" rel="tag">补码</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/" rel="tag">软件开发</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95/" rel="tag">软件测试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" rel="tag">防火墙</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
